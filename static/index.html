@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL Auction Room</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0e27; color: #e0e0e0; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 16px; }
+h1 { text-align: center; color: #ffd700; font-size: 1.8em; margin-bottom: 16px; }
+.stats { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.stat { background: #1a1f3a; padding: 8px 16px; border-radius: 8px; text-align: center; }
+.stat .val { font-size: 1.4em; font-weight: bold; color: #ffd700; }
+.stat .lbl { font-size: 0.75em; color: #888; }
+.auction-box { background: linear-gradient(135deg, #1a1f3a, #2a2f5a); border: 2px solid #ffd700; border-radius: 12px; padding: 24px; margin-bottom: 16px; text-align: center; }
+.auction-box.inactive { border-color: #333; opacity: 0.6; }
+.player-name { font-size: 2em; font-weight: bold; color: #fff; }
+.player-info { color: #aaa; margin: 4px 0 12px; }
+.timer { font-size: 2.5em; font-weight: bold; font-family: monospace; }
+.timer.urgent { color: #ff4444; }
+.timer.normal { color: #4caf50; }
+.current-bid { font-size: 1.3em; margin: 12px 0; }
+.current-bid .amount { color: #ffd700; font-weight: bold; font-size: 1.4em; }
+.bid-leader { color: #4caf50; font-weight: bold; }
+.bid-section { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.bid-section input, .bid-section button { padding: 10px 16px; border-radius: 8px; border: 1px solid #444; font-size: 1em; }
+.bid-section input { background: #1a1f3a; color: #fff; width: 100px; text-align: center; }
+.btn { cursor: pointer; font-weight: bold; border: none; }
+.btn-bid { background: #ffd700; color: #000; }
+.btn-bid:hover { background: #ffed4a; }
+.btn-bid:disabled { background: #555; color: #888; cursor: not-allowed; }
+.btn-next { background: #4caf50; color: #fff; padding: 10px 24px; border-radius: 8px; font-size: 1em; }
+.btn-next:hover { background: #66bb6a; }
+.btn-reset { background: #f44336; color: #fff; padding: 6px 16px; border-radius: 8px; font-size: 0.85em; }
+.quick-bids { display: flex; gap: 6px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+.quick-bids button { background: #2a2f5a; color: #ffd700; border: 1px solid #ffd700; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+.quick-bids button:hover { background: #3a3f6a; }
+.quick-bids button:disabled { opacity: 0.4; cursor: not-allowed; }
+.bidders { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+.bidder-card { background: #1a1f3a; border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 140px; flex: 1; }
+.bidder-card .bname { font-weight: bold; font-size: 1.1em; }
+.bidder-card .bbudget { color: #ffd700; font-size: 1.3em; font-weight: bold; }
+.bidder-card .bcount { color: #888; font-size: 0.85em; }
+.admin-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.sold-list { margin-top: 16px; }
+.sold-list h3 { color: #ffd700; margin-bottom: 8px; }
+.sold-table { width: 100%; border-collapse: collapse; }
+.sold-table th, .sold-table td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #222; }
+.sold-table th { color: #888; font-size: 0.85em; }
+.sold-table td { font-size: 0.9em; }
+.no-auction { color: #888; font-size: 1.2em; }
+.who-am-i { text-align: center; color: #ffd700; margin-bottom: 8px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+<!-- Login Screen -->
+<div id="loginScreen" style="display:flex; justify-content:center; align-items:center; min-height:100vh; flex-direction:column; gap:16px;">
+  <h1>🏏 IPL Auction Room</h1>
+  <div style="background:#1a1f3a; padding:32px; border-radius:12px; text-align:center;">
+    <p style="margin-bottom:16px; color:#aaa;">Enter your name to join the auction</p>
+    <input id="joinName" type="text" placeholder="Your name" style="padding:12px 20px; border-radius:8px; border:1px solid #444; background:#0a0e27; color:#fff; font-size:1.1em; width:250px;" onkeydown="if(event.key==='Enter')joinAuction()">
+    <br><br>
+    <button class="btn btn-next" onclick="joinAuction()" style="font-size:1.1em;">Join Auction</button>
+    <p id="joinSlots" style="margin-top:12px; color:#666; font-size:0.85em;">Max 3 bidders</p>
+  </div>
+</div>
+
+<!-- Main App (hidden until login) -->
+<div id="mainApp" style="display:none;">
+<div class="container">
+  <h1>🏏 IPL Auction Room</h1>
+  <div class="who-am-i" id="whoAmI"></div>
+
+  <div class="bidders" id="bidders"></div>
+
+  <div class="admin-bar">
+    <button class="btn btn-next" onclick="nextPlayer()" id="btnNext">🎲 Next Player</button>
+    <button class="btn btn-next" style="background:#2196f3" onclick="exportResults()">📥 Export</button>
+    <button class="btn btn-reset" onclick="resetAuction()">Reset All</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="val" id="unsold">-</div><div class="lbl">Unsold</div></div>
+    <div class="stat"><div class="val" id="sold">-</div><div class="lbl">Sold</div></div>
+  </div>
+
+  <div class="auction-box" id="auctionBox">
+    <div id="auctionContent"><div class="no-auction">Waiting for next player...</div></div>
+  </div>
+
+  <div class="sold-list">
+    <h3>Sold Players</h3>
+    <table class="sold-table">
+      <thead><tr><th>Player</th><th>Team</th><th>Role</th><th>Buyer</th><th>Price</th></tr></thead>
+      <tbody id="soldBody"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<script>
+let state = {};
+let myBidderId = null;
+let myName = null;
+const POLL_MS = 3000;
+
+const saved = localStorage.getItem('auction_bidder');
+if (saved) { const s = JSON.parse(saved); myBidderId = s.bidder_id; myName = s.name; }
+
+async function joinAuction() {
+  const name = document.getElementById('joinName').value.trim();
+  if (!name) return alert('Enter your name');
+  const r = await fetch('/api/join', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name}) });
+  const data = await r.json();
+  if (data.error) return alert(data.error);
+  myBidderId = data.bidder_id; myName = data.name;
+  localStorage.setItem('auction_bidder', JSON.stringify({bidder_id:myBidderId, name:myName}));
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('whoAmI').textContent = 'Playing as: ' + myName;
+  fetchState();
+}
+
+async function fetchState() {
+  try { const r = await fetch('/api/state'); state = await r.json(); render(); } catch(e) { console.error(e); }
+}
+
+function render() {
+  const bhtml = state.bidders?.map(b => {
+    const count = state.sold_players?.filter(p => p.sold_to === b.id).length || 0;
+    const isMe = b.id === myBidderId;
+    return `<div class="bidder-card" style="${isMe?'border:2px solid #ffd700':''}">
+      <div class="bname">${b.name}${isMe?' (You)':''}</div>
+      <div class="bbudget">${b.budget} pts</div>
+      <div class="bcount">${count}/15 players</div></div>`;
+  }).join('') || '';
+  document.getElementById('bidders').innerHTML = bhtml;
+
+  const soldCount = (state.total_count||0) - (state.unsold_count||0);
+  document.getElementById('unsold').textContent = state.unsold_count || 0;
+  document.getElementById('sold').textContent = soldCount;
+
+  const box = document.getElementById('auctionBox');
+  const content = document.getElementById('auctionContent');
+  if (state.current_player && state.auction_active) {
+    box.classList.remove('inactive');
+    const p = state.current_player;
+    const mins = Math.floor(state.time_left/60), secs = state.time_left%60;
+    const timerClass = state.time_left < 30 ? 'urgent' : 'normal';
+    const isLeading = state.highest_bidder === myName;
+    const hasPassed = (state.passed_ids||[]).includes(myBidderId);
+    const passedNames = state.bidders?.filter(b=>(state.passed_ids||[]).includes(b.id)).map(b=>b.name) || [];
+    content.innerHTML = `
+      <div class="player-name">${p.name}</div>
+      <div class="player-info">${p.team} · ${p.role} · Base: ${p.base_price} pts</div>
+      <div class="timer ${timerClass}">${mins}:${String(secs).padStart(2,'0')}</div>
+      <div class="current-bid">Current Bid: <span class="amount">${state.highest_bid} pts</span>
+        ${state.highest_bidder ? `<br><span class="bid-leader" style="${isLeading?'color:#ffd700':''}">${isLeading?'🏆 You are leading!':'Leading: '+state.highest_bidder}</span>` : ''}
+      </div>
+      <div class="bid-section">
+        <input type="number" id="bidAmount" min="${state.highest_bid+1}" value="${state.highest_bid+1}" step="1">
+        <button class="btn btn-bid" onclick="placeBid()" ${isLeading||hasPassed?'disabled':''}>${isLeading?'You Lead':hasPassed?'Passed':'Place Bid'}</button>
+        <button class="btn btn-bid" style="background:#ff9800;color:#000" onclick="passPlayer()" ${isLeading||hasPassed?'disabled':''}>${hasPassed?'✓ Passed':'Pass'}</button>
+      </div>
+      <div class="quick-bids">
+        ${[1,2,3,5,10].map(n=>`<button onclick="quickBid(${n})" ${isLeading||hasPassed?'disabled':''}>+${n}</button>`).join('')}
+      </div>
+      ${passedNames.length ? `<div style="margin-top:8px;color:#888;font-size:0.85em">Passed: ${passedNames.join(', ')}</div>` : ''}`;
+  } else {
+    box.classList.add('inactive');
+    content.innerHTML = '<div class="no-auction">Waiting for next player...</div>';
+  }
+
+  document.getElementById('soldBody').innerHTML = (state.sold_players||[]).map(p =>
+    `<tr><td>${p.name}</td><td>${p.team}</td><td>${p.role}</td><td>${p.buyer_name}${p.buyer_name===myName?' (You)':''}</td><td>${p.sold_price} pts</td></tr>`
+  ).join('');
+
+  // Disable Next Player button during active auction
+  const btnNext = document.getElementById('btnNext');
+  if (btnNext) {
+    btnNext.disabled = state.auction_active;
+    btnNext.style.opacity = state.auction_active ? '0.4' : '1';
+    btnNext.style.cursor = state.auction_active ? 'not-allowed' : 'pointer';
+  }
+}
+
+function quickBid(inc) { const i=document.getElementById('bidAmount'); if(i) i.value=state.highest_bid+inc; }
+
+async function placeBid() {
+  if(!myBidderId) return alert('Not logged in');
+  const amount = parseFloat(document.getElementById('bidAmount').value);
+  const r = await fetch('/api/bid', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bidder_id:myBidderId,amount})});
+  const data = await r.json();
+  if(data.error) alert(data.error);
+  fetchState();
+}
+
+async function nextPlayer() { await fetch('/api/next',{method:'POST'}); fetchState(); }
+
+async function passPlayer() {
+  if(!myBidderId) return;
+  const r = await fetch('/api/pass',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bidder_id:myBidderId})});
+  const data = await r.json();
+  if(data.error) alert(data.error);
+  fetchState();
+}
+
+async function resetAuction() {
+  if(!confirm('Reset everything? All bidders will need to rejoin.')) return;
+  await fetch('/api/reset',{method:'POST'});
+  localStorage.removeItem('auction_bidder'); myBidderId=null; myName=null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+}
+
+async function exportResults() {
+  const r = await fetch('/api/export'); const data = await r.json();
+  const blob = new Blob([JSON.stringify(data.results,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='auction_results.json'; a.click();
+}
+
+function logout() {
+  localStorage.removeItem('auction_bidder'); myBidderId=null; myName=null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+}
+
+if(myBidderId) {
+  // Validate saved session against server
+  fetch('/api/state').then(r=>r.json()).then(data => {
+    const found = data.bidders?.find(b => b.id === myBidderId);
+    if (found) {
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('mainApp').style.display='block';
+      document.getElementById('whoAmI').textContent='Playing as: '+myName;
+      state = data; render();
+    } else {
+      localStorage.removeItem('auction_bidder'); myBidderId=null; myName=null;
+      document.getElementById('loginScreen').style.display='flex';
+      document.getElementById('mainApp').style.display='none';
+    }
+  });
+} else {
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+}
+setInterval(fetchState, POLL_MS);
+</script>
+</body>
+</html>
