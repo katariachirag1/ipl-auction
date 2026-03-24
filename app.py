@@ -258,6 +258,10 @@ def get_state():
             if non_leaders and all(b["id"] in passed_ids for b in non_leaders):
                 _close_auction(db, state)
                 return get_state()
+        # Auto-close if ALL bidders passed (no bids at all — player unsold)
+        if len(bidders) > 0 and len(passed_ids) >= len(bidders):
+            _close_auction(db, state)
+            return get_state()
 
     return jsonify({
         "current_player": current,
