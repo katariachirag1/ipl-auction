@@ -205,8 +205,8 @@ def join():
 
     # Check if slots available
     count = db.execute("SELECT COUNT(*) FROM bidders").fetchone()[0]
-    if count >= 3:
-        return jsonify({"error": "All 3 slots taken. Current bidders: " +
+    if count >= 5:
+        return jsonify({"error": "All 5 slots taken. Current bidders: " +
                         ", ".join(r["name"] for r in db.execute("SELECT name FROM bidders").fetchall())}), 400
 
     db.execute("INSERT INTO bidders (name, budget) VALUES (?, ?)", (name, BUDGET))
@@ -241,7 +241,7 @@ def get_state():
             return get_state()  # recurse to get fresh state
 
     bidders = [dict(r) for r in db.execute("SELECT * FROM bidders ORDER BY id").fetchall()]
-    unsold = db.execute("SELECT COUNT(*) FROM players WHERE sold_to IS NULL").fetchone()[0]
+    unsold = db.execute("SELECT COUNT(*) FROM players WHERE sold_to IS NULL AND (sold_price IS NULL OR sold_price != -1)").fetchone()[0]
     total = db.execute("SELECT COUNT(*) FROM players").fetchone()[0]
     sold_players = [dict(r) for r in db.execute(
         "SELECT p.*, b.name as buyer_name FROM players p JOIN bidders b ON p.sold_to=b.id WHERE p.sold_to IS NOT NULL ORDER BY p.id"
@@ -286,7 +286,7 @@ def next_player():
         _close_auction(db, state)
 
     # Pick random unsold player — higher base_price first
-    unsold = db.execute("SELECT id, base_price FROM players WHERE sold_to IS NULL ORDER BY base_price DESC").fetchall()
+    unsold = db.execute("SELECT id, base_price FROM players WHERE sold_to IS NULL AND (sold_price IS NULL OR sold_price != -1) ORDER BY base_price DESC").fetchall()
     if not unsold:
         return jsonify({"error": "All players sold"}), 400
 
@@ -297,7 +297,7 @@ def next_player():
     player = db.execute("SELECT * FROM players WHERE id=?", (pick["id"],)).fetchone()
     db.execute(
         "UPDATE auction_state SET current_player_id=?, started_at=?, highest_bid=?, highest_bidder_id=NULL WHERE id=1",
-        (pick["id"], time.time(), player["base_price"]),
+        (pick["id"], time.time(), 0),
     )
     db.execute("DELETE FROM passes")
     db.commit()
@@ -326,6 +326,11 @@ def place_bid():
     current_high = state["highest_bid"] or 0
     if amount <= current_high:
         return jsonify({"error": f"Bid must be higher than {current_high}"}), 400
+
+    # First bid must be at least base price
+    player = db.execute("SELECT base_price FROM players WHERE id=?", (state["current_player_id"],)).fetchone()
+    if player and amount < player["base_price"]:
+        return jsonify({"error": f"Bid must be at least base price ({player['base_price']})"}), 400
 
     bidder = db.execute("SELECT * FROM bidders WHERE id=?", (bidder_id,)).fetchone()
     if not bidder:
@@ -415,6 +420,9 @@ def _close_auction(db, state):
                    (state["highest_bidder_id"], state["highest_bid"], pid))
         db.execute("UPDATE bidders SET budget = budget - ? WHERE id=?",
                    (state["highest_bid"], state["highest_bidder_id"]))
+    else:
+        # No bids — mark as unsold (sold_price = -1 sentinel)
+        db.execute("UPDATE players SET sold_price=-1 WHERE id=?", (pid,))
     db.execute("UPDATE auction_state SET current_player_id=NULL, started_at=NULL, highest_bid=0, highest_bidder_id=NULL WHERE id=1")
     db.commit()
 

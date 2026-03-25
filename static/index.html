@@ -62,7 +62,7 @@ h1 { text-align: center; color: #ffd700; font-size: 1.8em; margin-bottom: 16px; 
     <input id="joinName" type="text" placeholder="Your name" style="padding:12px 20px; border-radius:8px; border:1px solid #444; background:#0a0e27; color:#fff; font-size:1.1em; width:250px;" onkeydown="if(event.key==='Enter')joinAuction()">
     <br><br>
     <button class="btn btn-next" onclick="joinAuction()" style="font-size:1.1em;">Join Auction</button>
-    <p id="joinSlots" style="margin-top:12px; color:#666; font-size:0.85em;">Max 3 bidders</p>
+    <p id="joinSlots" style="margin-top:12px; color:#666; font-size:0.85em;">Max 5 bidders</p>
   </div>
 </div>
 
@@ -159,7 +159,7 @@ function render() {
         ${state.highest_bidder ? `<br><span class="bid-leader" style="${isLeading?'color:#ffd700':''}">${isLeading?'🏆 You are leading!':'Leading: '+state.highest_bidder}</span>` : ''}
       </div>
       <div class="bid-section">
-        <input type="number" id="bidAmount" min="${state.highest_bid+1}" value="${state.highest_bid+1}" step="1">
+        <input type="number" id="bidAmount" min="${state.highest_bid > 0 ? state.highest_bid+1 : p.base_price}" value="${state.highest_bid > 0 ? state.highest_bid+1 : p.base_price}" step="1">
         <button class="btn btn-bid" onclick="placeBid()" ${isLeading||hasPassed?'disabled':''}>${isLeading?'You Lead':hasPassed?'Passed':'Place Bid'}</button>
         <button class="btn btn-bid" style="background:#ff9800;color:#000" onclick="passPlayer()" ${isLeading||hasPassed?'disabled':''}>${hasPassed?'✓ Passed':'Pass'}</button>
       </div>
@@ -185,7 +185,7 @@ function render() {
   }
 }
 
-function quickBid(inc) { const i=document.getElementById('bidAmount'); if(i) i.value=state.highest_bid+inc; }
+function quickBid(inc) { const i=document.getElementById('bidAmount'); if(i) { const base = state.highest_bid > 0 ? state.highest_bid : (state.current_player?.base_price || 1); i.value = base + inc; } }
 
 async function placeBid() {
   if(!myBidderId) return alert('Not logged in');
