@@ -378,12 +378,12 @@ def place_bid():
     db.execute("UPDATE auction_state SET highest_bid=?, highest_bidder_id=? WHERE id=1",
                (amount, bidder_id))
 
-    # Extend timer by 15 sec on each bid, but never exceed AUCTION_DURATION
+    # Extend timer by 15 sec only when less than 15 sec remain
     elapsed = time.time() - (state["started_at"] or 0)
     time_left = max(0, AUCTION_DURATION - elapsed)
-    new_time_left = min(AUCTION_DURATION, time_left + 15)
-    new_started = time.time() - (AUCTION_DURATION - new_time_left)
-    db.execute("UPDATE auction_state SET started_at=? WHERE id=1", (new_started,))
+    if time_left < 15:
+        new_started = time.time() - (AUCTION_DURATION - 15)
+        db.execute("UPDATE auction_state SET started_at=? WHERE id=1", (new_started,))
 
     db.commit()
     return jsonify({"success": True, "new_high": amount, "bidder": bidder["name"]})
