@@ -10,7 +10,8 @@ from flask import Flask, g, jsonify, request, send_from_directory
 
 app = Flask(__name__, static_folder="static")
 DB_PATH = os.path.join(os.path.dirname(__file__), "auction.db")
-AUCTION_DURATION = 120  # 2 minutes per player
+AUCTION_DURATION = 60  # 1 minute per player
+MIN_DISPLAY_TIME = 10  # minimum seconds before auto-close can happen
 BUDGET = 100  # points per bidder
 
 
@@ -252,16 +253,29 @@ def get_state():
     if state["current_player_id"]:
         passed_ids = [r[0] for r in db.execute(
             "SELECT bidder_id FROM passes WHERE player_id=?", (state["current_player_id"],)).fetchall()]
-        # Auto-close if all non-leading bidders have passed
-        if state["highest_bidder_id"] and len(bidders) > 0:
-            non_leaders = [b for b in bidders if b["id"] != state["highest_bidder_id"]]
-            if non_leaders and all(b["id"] in passed_ids for b in non_leaders):
+
+        # Auto-pass bidders who already have 15 players
+        for b in bidders:
+            owned = db.execute("SELECT COUNT(*) FROM players WHERE sold_to=?", (b["id"],)).fetchone()[0]
+            if owned >= 15 and b["id"] not in passed_ids:
+                db.execute("INSERT OR IGNORE INTO passes (player_id, bidder_id) VALUES (?,?)",
+                           (state["current_player_id"], b["id"]))
+                passed_ids.append(b["id"])
+                db.commit()
+
+        elapsed = time.time() - (state["started_at"] or 0)
+
+        # Auto-close if all non-leading bidders have passed (but not before MIN_DISPLAY_TIME)
+        if elapsed >= MIN_DISPLAY_TIME:
+            if state["highest_bidder_id"] and len(bidders) > 0:
+                non_leaders = [b for b in bidders if b["id"] != state["highest_bidder_id"]]
+                if non_leaders and all(b["id"] in passed_ids for b in non_leaders):
+                    _close_auction(db, state)
+                    return get_state()
+            # Auto-close if ALL bidders passed (no bids at all — player unsold)
+            if len(bidders) > 0 and len(passed_ids) >= len(bidders):
                 _close_auction(db, state)
                 return get_state()
-        # Auto-close if ALL bidders passed (no bids at all — player unsold)
-        if len(bidders) > 0 and len(passed_ids) >= len(bidders):
-            _close_auction(db, state)
-            return get_state()
 
     return jsonify({
         "current_player": current,
@@ -349,6 +363,14 @@ def place_bid():
                (state["current_player_id"], bidder_id, amount, time.time()))
     db.execute("UPDATE auction_state SET highest_bid=?, highest_bidder_id=? WHERE id=1",
                (amount, bidder_id))
+
+    # Extend timer by 15 sec on each bid, but never exceed AUCTION_DURATION
+    elapsed = time.time() - (state["started_at"] or 0)
+    time_left = max(0, AUCTION_DURATION - elapsed)
+    if time_left < 15:
+        new_started = time.time() - (AUCTION_DURATION - 15)
+        db.execute("UPDATE auction_state SET started_at=? WHERE id=1", (new_started,))
+
     db.commit()
     return jsonify({"success": True, "new_high": amount, "bidder": bidder["name"]})
 

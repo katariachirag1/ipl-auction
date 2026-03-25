@@ -151,6 +151,7 @@ function render() {
     const isLeading = state.highest_bidder === myName;
     const hasPassed = (state.passed_ids||[]).includes(myBidderId);
     const passedNames = state.bidders?.filter(b=>(state.passed_ids||[]).includes(b.id)).map(b=>b.name) || [];
+    const myOwned = state.sold_players?.filter(p => p.sold_to === myBidderId).length || 0;
     content.innerHTML = `
       <div class="player-name">${p.name}</div>
       <div class="player-info">${p.team} · ${p.role} · Base: ${p.base_price} pts</div>
@@ -160,13 +161,14 @@ function render() {
       </div>
       <div class="bid-section">
         <input type="number" id="bidAmount" min="${state.highest_bid > 0 ? state.highest_bid+1 : p.base_price}" value="${state.highest_bid > 0 ? state.highest_bid+1 : p.base_price}" step="1">
-        <button class="btn btn-bid" onclick="placeBid()" ${isLeading||hasPassed?'disabled':''}>${isLeading?'You Lead':hasPassed?'Passed':'Place Bid'}</button>
-        <button class="btn btn-bid" style="background:#ff9800;color:#000" onclick="passPlayer()" ${isLeading||hasPassed?'disabled':''}>${hasPassed?'✓ Passed':'Pass'}</button>
+        <button class="btn btn-bid" onclick="placeBid()" ${isLeading||hasPassed||myOwned>=15?'disabled':''}>${isLeading?'You Lead':hasPassed||myOwned>=15?'Passed':'Place Bid'}</button>
+        <button class="btn btn-bid" style="background:#ff9800;color:#000" onclick="passPlayer()" ${isLeading||hasPassed||myOwned>=15?'disabled':''}>${hasPassed||myOwned>=15?'✓ Passed':'Pass'}</button>
       </div>
       <div class="quick-bids">
-        ${[1,2,3,5,10].map(n=>`<button onclick="quickBid(${n})" ${isLeading||hasPassed?'disabled':''}>+${n}</button>`).join('')}
+        ${[1,2,3,5,10].map(n=>`<button onclick="quickBid(${n})" ${isLeading||hasPassed||myOwned>=15?'disabled':''}>+${n}</button>`).join('')}
       </div>
-      ${passedNames.length ? `<div style="margin-top:8px;color:#888;font-size:0.85em">Passed: ${passedNames.join(', ')}</div>` : ''}`;
+      ${passedNames.length ? `<div style="margin-top:8px;color:#888;font-size:0.85em">Passed: ${passedNames.join(', ')}</div>` : ''}
+      ${myOwned >= 15 ? '<div style="margin-top:8px;color:#ff9800;font-size:0.9em">🏆 You have 15 players — auto-passing</div>' : ''}`;
   } else {
     box.classList.add('inactive');
     content.innerHTML = '<div class="no-auction">Waiting for next player...</div>';
