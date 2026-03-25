@@ -65,6 +65,10 @@ def init_db():
             bidder_id INTEGER NOT NULL,
             PRIMARY KEY (player_id, bidder_id)
         );
+        CREATE TABLE IF NOT EXISTS autopass (
+            bidder_id INTEGER PRIMARY KEY,
+            enabled INTEGER NOT NULL DEFAULT 0
+        );
         INSERT OR IGNORE INTO auction_state (id) VALUES (1);
     """)
     # Seed bidders if empty — no longer pre-seeded, users join dynamically
@@ -288,6 +292,7 @@ def get_state():
         "sold_players": sold_players,
         "auction_active": current is not None and time_left > 0,
         "passed_ids": passed_ids,
+        "autopass_ids": [r["bidder_id"] for r in db.execute("SELECT bidder_id FROM autopass WHERE enabled=1").fetchall()],
     })
 
 
@@ -314,6 +319,15 @@ def next_player():
         (pick["id"], time.time(), 0),
     )
     db.execute("DELETE FROM passes")
+    db.commit()
+
+    # Auto-pass bidders who have autopass enabled or already have 15 players
+    all_bidders = db.execute("SELECT id FROM bidders").fetchall()
+    for b in all_bidders:
+        owned = db.execute("SELECT COUNT(*) FROM players WHERE sold_to=?", (b["id"],)).fetchone()[0]
+        autopass = db.execute("SELECT enabled FROM autopass WHERE bidder_id=?", (b["id"],)).fetchone()
+        if owned >= 15 or (autopass and autopass[0]):
+            db.execute("INSERT OR IGNORE INTO passes (player_id, bidder_id) VALUES (?,?)", (pick["id"], b["id"]))
     db.commit()
     return jsonify({"player": dict(player)})
 
@@ -391,11 +405,44 @@ def pass_player():
     return jsonify({"success": True})
 
 
+@app.route("/api/autopass", methods=["POST"])
+def toggle_autopass():
+    db = get_db()
+    data = request.json
+    bidder_id = data.get("bidder_id")
+    enabled = data.get("enabled", False)
+    db.execute("INSERT OR REPLACE INTO autopass (bidder_id, enabled) VALUES (?,?)",
+               (bidder_id, 1 if enabled else 0))
+    # If enabling autopass and there's an active auction, auto-pass current player too
+    if enabled:
+        state = db.execute("SELECT * FROM auction_state WHERE id=1").fetchone()
+        if state["current_player_id"] and state["highest_bidder_id"] != bidder_id:
+            db.execute("INSERT OR IGNORE INTO passes (player_id, bidder_id) VALUES (?,?)",
+                       (state["current_player_id"], bidder_id))
+    db.commit()
+    return jsonify({"success": True})
+
+
+@app.route("/api/optin", methods=["POST"])
+def opt_in():
+    """Remove pass for current player (opt back in to bid)."""
+    db = get_db()
+    data = request.json
+    bidder_id = data.get("bidder_id")
+    state = db.execute("SELECT * FROM auction_state WHERE id=1").fetchone()
+    if not state["current_player_id"]:
+        return jsonify({"error": "No active auction"}), 400
+    db.execute("DELETE FROM passes WHERE player_id=? AND bidder_id=?",
+               (state["current_player_id"], bidder_id))
+    db.commit()
+    return jsonify({"success": True})
+
+
 @app.route("/api/reset", methods=["POST"])
 def reset():
     db = get_db()
     db.executescript("""
-        DELETE FROM bids; DELETE FROM passes; DELETE FROM auction_state; DELETE FROM players; DELETE FROM bidders;
+        DELETE FROM bids; DELETE FROM passes; DELETE FROM autopass; DELETE FROM auction_state; DELETE FROM players; DELETE FROM bidders;
         INSERT INTO auction_state (id) VALUES (1);
     """)
     db.commit()

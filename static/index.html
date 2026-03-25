@@ -71,6 +71,11 @@ h1 { text-align: center; color: #ffd700; font-size: 1.8em; margin-bottom: 16px; 
 <div class="container">
   <h1>🏏 IPL Auction Room</h1>
   <div class="who-am-i" id="whoAmI"></div>
+  <div style="text-align:center;margin-bottom:8px;">
+    <label style="color:#aaa;font-size:0.9em;cursor:pointer;">
+      <input type="checkbox" id="autopassToggle" onchange="toggleAutopass()"> Auto-pass (skip all players unless I opt in)
+    </label>
+  </div>
 
   <div class="bidders" id="bidders"></div>
 
@@ -162,6 +167,7 @@ function render() {
       <div class="bid-section">
         <input type="number" id="bidAmount" min="${state.highest_bid > 0 ? state.highest_bid+1 : p.base_price}" value="${state.highest_bid > 0 ? state.highest_bid+1 : p.base_price}" step="1">
         <button class="btn btn-bid" onclick="placeBid()" ${isLeading||hasPassed||myOwned>=15?'disabled':''}>${isLeading?'You Lead':hasPassed||myOwned>=15?'Passed':'Place Bid'}</button>
+        ${hasPassed && !isLeading && myOwned<15 ? '<button class="btn btn-bid" style="background:#4caf50;color:#fff" onclick="optIn()">🙋 Opt In</button>' : ''}
         <button class="btn btn-bid" style="background:#ff9800;color:#000" onclick="passPlayer()" ${isLeading||hasPassed||myOwned>=15?'disabled':''}>${hasPassed||myOwned>=15?'✓ Passed':'Pass'}</button>
       </div>
       <div class="quick-bids">
@@ -177,6 +183,10 @@ function render() {
   document.getElementById('soldBody').innerHTML = (state.sold_players||[]).map(p =>
     `<tr><td>${p.name}</td><td>${p.team}</td><td>${p.role}</td><td>${p.buyer_name}${p.buyer_name===myName?' (You)':''}</td><td>${p.sold_price} pts</td></tr>`
   ).join('');
+
+  // Sync autopass checkbox
+  const apToggle = document.getElementById('autopassToggle');
+  if (apToggle) apToggle.checked = (state.autopass_ids||[]).includes(myBidderId);
 
   // Disable Next Player button during active auction
   const btnNext = document.getElementById('btnNext');
@@ -205,6 +215,19 @@ async function passPlayer() {
   const r = await fetch('/api/pass',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bidder_id:myBidderId})});
   const data = await r.json();
   if(data.error) alert(data.error);
+  fetchState();
+}
+
+async function toggleAutopass() {
+  if(!myBidderId) return;
+  const enabled = document.getElementById('autopassToggle').checked;
+  await fetch('/api/autopass',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bidder_id:myBidderId, enabled})});
+  fetchState();
+}
+
+async function optIn() {
+  if(!myBidderId) return;
+  await fetch('/api/optin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bidder_id:myBidderId})});
   fetchState();
 }
 
