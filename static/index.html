@@ -80,9 +80,10 @@ h1 { text-align: center; color: #ffd700; font-size: 1.8em; margin-bottom: 16px; 
   <div class="bidders" id="bidders"></div>
 
   <div class="admin-bar">
-    <button class="btn btn-next" onclick="nextPlayer()" id="btnNext">🎲 Next Player</button>
-    <button class="btn btn-next" style="background:#2196f3" onclick="exportResults()">📥 Export</button>
-    <button class="btn btn-reset" onclick="resetAuction()">Reset All</button>
+    <button class="btn btn-next" onclick="nextPlayer()" id="btnNext" style="display:none">🎲 Next Player</button>
+    <button class="btn btn-next" style="background:#2196f3;display:none" id="btnExport" onclick="exportResults()">📥 Export</button>
+    <button class="btn btn-next" style="background:#9c27b0" onclick="window.location='/points'">🏆 Points</button>
+    <button class="btn btn-reset" id="btnReset" onclick="resetAuction()" style="display:none">Reset All</button>
   </div>
 
   <div class="stats">
@@ -108,10 +109,11 @@ h1 { text-align: center; color: #ffd700; font-size: 1.8em; margin-bottom: 16px; 
 let state = {};
 let myBidderId = null;
 let myName = null;
+let isAdmin = false;
 const POLL_MS = 3000;
 
 const saved = localStorage.getItem('auction_bidder');
-if (saved) { const s = JSON.parse(saved); myBidderId = s.bidder_id; myName = s.name; }
+if (saved) { const s = JSON.parse(saved); myBidderId = s.bidder_id; myName = s.name; isAdmin = s.is_admin || false; }
 
 async function joinAuction() {
   const name = document.getElementById('joinName').value.trim();
@@ -119,8 +121,8 @@ async function joinAuction() {
   const r = await fetch('/api/join', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name}) });
   const data = await r.json();
   if (data.error) return alert(data.error);
-  myBidderId = data.bidder_id; myName = data.name;
-  localStorage.setItem('auction_bidder', JSON.stringify({bidder_id:myBidderId, name:myName}));
+  myBidderId = data.bidder_id; myName = data.name; isAdmin = data.is_admin || false;
+  localStorage.setItem('auction_bidder', JSON.stringify({bidder_id:myBidderId, name:myName, is_admin:isAdmin}));
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('mainApp').style.display = 'block';
   document.getElementById('whoAmI').textContent = 'Playing as: ' + myName;
@@ -187,6 +189,12 @@ function render() {
   // Sync autopass checkbox
   const apToggle = document.getElementById('autopassToggle');
   if (apToggle) apToggle.checked = (state.autopass_ids||[]).includes(myBidderId);
+
+  // Show/hide admin buttons
+  const showAdmin = isAdmin || myBidderId === state.admin_id;
+  document.getElementById('btnNext').style.display = showAdmin ? '' : 'none';
+  document.getElementById('btnExport').style.display = showAdmin ? '' : 'none';
+  document.getElementById('btnReset').style.display = showAdmin ? '' : 'none';
 
   // Disable Next Player button during active auction
   const btnNext = document.getElementById('btnNext');

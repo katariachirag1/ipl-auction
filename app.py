@@ -35,7 +35,8 @@ def init_db():
         CREATE TABLE IF NOT EXISTS bidders (
             id INTEGER PRIMARY KEY,
             name TEXT UNIQUE NOT NULL,
-            budget REAL NOT NULL DEFAULT 100
+            budget REAL NOT NULL DEFAULT 100,
+            is_admin INTEGER NOT NULL DEFAULT 0
         );
         CREATE TABLE IF NOT EXISTS players (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,6 +69,16 @@ def init_db():
         CREATE TABLE IF NOT EXISTS autopass (
             bidder_id INTEGER PRIMARY KEY,
             enabled INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE TABLE IF NOT EXISTS match_points (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            match_id TEXT NOT NULL,
+            match_name TEXT,
+            match_date TEXT,
+            player_id INTEGER NOT NULL,
+            player_name TEXT NOT NULL,
+            points REAL NOT NULL DEFAULT 0,
+            breakdown TEXT
         );
         INSERT OR IGNORE INTO auction_state (id) VALUES (1);
     """)
@@ -195,6 +206,11 @@ def index():
     return send_from_directory("static", "index.html")
 
 
+@app.route("/points")
+def points_page():
+    return send_from_directory("static", "points.html")
+
+
 @app.route("/api/join", methods=["POST"])
 def join():
     db = get_db()
@@ -206,7 +222,7 @@ def join():
     # Check if name already taken
     existing = db.execute("SELECT * FROM bidders WHERE name=?", (name,)).fetchone()
     if existing:
-        return jsonify({"bidder_id": existing["id"], "name": existing["name"], "budget": existing["budget"]})
+        return jsonify({"bidder_id": existing["id"], "name": existing["name"], "budget": existing["budget"], "is_admin": bool(existing["is_admin"])})
 
     # Check if slots available
     count = db.execute("SELECT COUNT(*) FROM bidders").fetchone()[0]
@@ -214,10 +230,12 @@ def join():
         return jsonify({"error": "All 5 slots taken. Current bidders: " +
                         ", ".join(r["name"] for r in db.execute("SELECT name FROM bidders").fetchall())}), 400
 
-    db.execute("INSERT INTO bidders (name, budget) VALUES (?, ?)", (name, BUDGET))
+    # First bidder becomes admin
+    is_admin = 1 if count == 0 else 0
+    db.execute("INSERT INTO bidders (name, budget, is_admin) VALUES (?, ?, ?)", (name, BUDGET, is_admin))
     db.commit()
     bidder = db.execute("SELECT * FROM bidders WHERE name=?", (name,)).fetchone()
-    return jsonify({"bidder_id": bidder["id"], "name": bidder["name"], "budget": bidder["budget"]})
+    return jsonify({"bidder_id": bidder["id"], "name": bidder["name"], "budget": bidder["budget"], "is_admin": bool(bidder["is_admin"])})
 
 
 @app.route("/api/state")
@@ -293,6 +311,7 @@ def get_state():
         "auction_active": current is not None and time_left > 0,
         "passed_ids": passed_ids,
         "autopass_ids": [r["bidder_id"] for r in db.execute("SELECT bidder_id FROM autopass WHERE enabled=1").fetchall()],
+        "admin_id": (lambda r: r["id"] if r else None)(db.execute("SELECT id FROM bidders WHERE is_admin=1").fetchone()),
     })
 
 
@@ -438,6 +457,82 @@ def opt_in():
     return jsonify({"success": True})
 
 
+@app.route("/api/matches")
+def get_matches():
+    from fantasy import fetch_ipl_matches
+    try:
+        matches = fetch_ipl_matches()
+        # Only completed matches
+        completed = [m for m in matches if m.get("matchEnded", False)]
+        completed.sort(key=lambda m: m.get("date", ""), reverse=True)
+        return jsonify({"matches": completed[:20]})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/update_points", methods=["POST"])
+def update_points():
+    from fantasy import fetch_scorecard, calculate_fantasy_points
+    db = get_db()
+    data = request.json
+    match_id = data.get("match_id")
+    if not match_id:
+        return jsonify({"error": "match_id required"}), 400
+
+    # Check if already processed
+    existing = db.execute("SELECT match_id FROM match_points WHERE match_id=? LIMIT 1", (match_id,)).fetchone()
+    if existing:
+        return jsonify({"error": "Match already processed"}), 400
+
+    try:
+        scorecard = fetch_scorecard(match_id)
+        player_points = calculate_fantasy_points(scorecard)
+
+        match_name = scorecard.get("name", match_id)
+        match_date = scorecard.get("date", "")
+
+        count = 0
+        for pname, pdata in player_points.items():
+            pts = pdata["points"]
+            # Find if this player is in our auction
+            player = db.execute("SELECT id, sold_to FROM players WHERE name=?", (pname,)).fetchone()
+            if player and player["sold_to"]:
+                db.execute(
+                    "INSERT INTO match_points (match_id, match_name, match_date, player_id, player_name, points, breakdown) VALUES (?,?,?,?,?,?,?)",
+                    (match_id, match_name, match_date, player["id"], pname, pts, json.dumps(pdata["breakdown"])),
+                )
+                count += 1
+
+        db.commit()
+        return jsonify({"success": True, "players_updated": count, "match": match_name})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/leaderboard")
+def leaderboard():
+    db = get_db()
+    bidders = [dict(r) for r in db.execute("SELECT * FROM bidders ORDER BY id").fetchall()]
+    result = []
+    for b in bidders:
+        # Get all players owned by this bidder
+        owned = db.execute("SELECT id, name, team, role FROM players WHERE sold_to=?", (b["id"],)).fetchall()
+        total_pts = 0
+        player_details = []
+        for p in owned:
+            pts = db.execute("SELECT COALESCE(SUM(points),0) FROM match_points WHERE player_id=?", (p["id"],)).fetchone()[0]
+            total_pts += pts
+            player_details.append({"name": p["name"], "team": p["team"], "role": p["role"], "points": pts})
+        player_details.sort(key=lambda x: x["points"], reverse=True)
+        result.append({"bidder": b["name"], "total_points": total_pts, "players": player_details})
+    result.sort(key=lambda x: x["total_points"], reverse=True)
+
+    # Get processed matches
+    matches = [dict(r) for r in db.execute("SELECT DISTINCT match_id, match_name, match_date FROM match_points ORDER BY match_date DESC").fetchall()]
+
+    return jsonify({"leaderboard": result, "matches_processed": matches})
+
+
 @app.route("/api/reset", methods=["POST"])
 def reset():
     db = get_db()
@@ -459,7 +554,6 @@ def export_results():
     sold = db.execute("SELECT * FROM players WHERE sold_to IS NOT NULL ORDER BY sold_price DESC").fetchall()
     unsold = db.execute("SELECT * FROM players WHERE sold_to IS NULL ORDER BY name").fetchall()
 
-    # JSON export
     result = {"bidders": [], "sold": [], "unsold": []}
     for b_id, b_name in bidders.items():
         budget = db.execute("SELECT budget FROM bidders WHERE id=?", (b_id,)).fetchone()
@@ -474,12 +568,56 @@ def export_results():
     for p in unsold:
         result["unsold"].append({"name": p["name"], "team": p["team"], "role": p["role"]})
 
-    # Save to file
+    # Include match points for full backup
+    match_points = [dict(r) for r in db.execute("SELECT * FROM match_points").fetchall()]
+    result["match_points"] = match_points
+
     out_path = os.path.join(os.path.dirname(__file__), "auction_results.json")
     with open(out_path, "w") as f:
         json.dump(result, f, indent=2)
 
     return jsonify({"saved_to": out_path, "results": result})
+
+
+@app.route("/api/import_backup", methods=["POST"])
+def import_backup():
+    """Restore auction data from exported JSON backup."""
+    db = get_db()
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    try:
+        for bidder_data in data.get("bidders", []):
+            name = bidder_data["name"]
+            budget = bidder_data.get("remaining_budget", BUDGET)
+            existing = db.execute("SELECT id FROM bidders WHERE name=?", (name,)).fetchone()
+            if not existing:
+                db.execute("INSERT INTO bidders (name, budget, is_admin) VALUES (?,?,0)", (name, budget))
+
+        first = db.execute("SELECT id FROM bidders ORDER BY id LIMIT 1").fetchone()
+        if first:
+            db.execute("UPDATE bidders SET is_admin=1 WHERE id=?", (first["id"],))
+
+        for sold in data.get("sold", []):
+            buyer = db.execute("SELECT id FROM bidders WHERE name=?", (sold.get("buyer", ""),)).fetchone()
+            if buyer:
+                db.execute("UPDATE players SET sold_to=?, sold_price=? WHERE name=?",
+                           (buyer["id"], sold.get("price", 0), sold["name"]))
+
+        for mp in data.get("match_points", []):
+            player = db.execute("SELECT id FROM players WHERE name=?", (mp["player_name"],)).fetchone()
+            pid = player["id"] if player else mp.get("player_id", 0)
+            db.execute(
+                "INSERT OR IGNORE INTO match_points (match_id, match_name, match_date, player_id, player_name, points, breakdown) VALUES (?,?,?,?,?,?,?)",
+                (mp["match_id"], mp.get("match_name"), mp.get("match_date"),
+                 pid, mp["player_name"], mp["points"], mp.get("breakdown", "")),
+            )
+
+        db.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 def _close_auction(db, state):

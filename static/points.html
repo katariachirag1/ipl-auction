@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL Fantasy Points</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0e27; color: #e0e0e0; min-height: 100vh; }
+.container { max-width: 900px; margin: 0 auto; padding: 16px; }
+h1 { text-align: center; color: #ffd700; font-size: 1.8em; margin-bottom: 16px; }
+h2 { color: #ffd700; margin: 16px 0 8px; font-size: 1.2em; }
+.nav { text-align: center; margin-bottom: 16px; }
+.nav a { color: #4caf50; text-decoration: none; font-size: 1em; }
+.leaderboard { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.bidder-row { background: #1a1f3a; border-radius: 8px; padding: 16px; }
+.bidder-row.rank-1 { border: 2px solid #ffd700; }
+.bidder-row.rank-2 { border: 2px solid #c0c0c0; }
+.bidder-row.rank-3 { border: 2px solid #cd7f32; }
+.bidder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.bidder-name { font-size: 1.3em; font-weight: bold; }
+.bidder-pts { font-size: 1.5em; font-weight: bold; color: #ffd700; }
+.rank-badge { font-size: 1.5em; margin-right: 8px; }
+.player-list { font-size: 0.85em; color: #aaa; }
+.player-list table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.player-list th, .player-list td { padding: 3px 8px; text-align: left; border-bottom: 1px solid #222; }
+.player-list th { color: #666; }
+.admin-section { background: #1a1f3a; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.match-btn { background: #2a2f5a; color: #e0e0e0; border: 1px solid #444; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin: 4px; font-size: 0.85em; }
+.match-btn:hover { background: #3a3f6a; }
+.match-btn.processed { background: #1a3a1a; border-color: #4caf50; color: #4caf50; cursor: default; }
+.status { text-align: center; color: #888; padding: 8px; }
+.matches-done { font-size: 0.85em; color: #666; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🏏 IPL Fantasy Leaderboard</h1>
+  <div class="nav"><a href="/">← Back to Auction</a></div>
+
+  <div class="admin-section" id="adminSection" style="display:none">
+    <h2>Update Points from Match</h2>
+    <p style="color:#888;font-size:0.85em;margin-bottom:8px;">Click a match to fetch scorecard and calculate fantasy points</p>
+    <div id="matchList"><div class="status">Loading matches...</div></div>
+    <div id="updateStatus"></div>
+  </div>
+
+  <h2>Leaderboard</h2>
+  <div class="leaderboard" id="leaderboard"><div class="status">Loading...</div></div>
+
+  <div class="matches-done" id="matchesDone"></div>
+</div>
+
+<script>
+const rankEmoji = ['🥇','🥈','🥉'];
+let processedMatches = new Set();
+
+async function loadLeaderboard() {
+  const r = await fetch('/api/leaderboard');
+  const data = await r.json();
+  const lb = data.leaderboard || [];
+  processedMatches = new Set((data.matches_processed||[]).map(m=>m.match_id));
+
+  const el = document.getElementById('leaderboard');
+  if (!lb.length) { el.innerHTML = '<div class="status">No bidders yet. Complete the auction first.</div>'; return; }
+
+  el.innerHTML = lb.map((b,i) => `
+    <div class="bidder-row rank-${i+1}">
+      <div class="bidder-header">
+        <div><span class="rank-badge">${rankEmoji[i]||'#'+(i+1)}</span><span class="bidder-name">${b.bidder}</span></div>
+        <div class="bidder-pts">${b.total_points} pts</div>
+      </div>
+      <div class="player-list">
+        <table>
+          <thead><tr><th>Player</th><th>Team</th><th>Role</th><th>Points</th></tr></thead>
+          <tbody>${b.players.map(p=>`<tr><td>${p.name}</td><td>${p.team}</td><td>${p.role}</td><td>${p.points}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('matchesDone').innerHTML = data.matches_processed?.length
+    ? `<p>Matches processed: ${data.matches_processed.map(m=>m.match_name).join(', ')}</p>` : '';
+}
+
+async function loadMatches() {
+  try {
+    const r = await fetch('/api/matches');
+    const data = await r.json();
+    const el = document.getElementById('matchList');
+    if (data.error) { el.innerHTML = `<div class="status">${data.error}</div>`; return; }
+    const matches = data.matches || [];
+    if (!matches.length) { el.innerHTML = '<div class="status">No completed IPL matches found</div>'; return; }
+    el.innerHTML = matches.map(m => {
+      const done = processedMatches.has(m.id);
+      return `<button class="match-btn ${done?'processed':''}" data-mid="${m.id}" onclick="${done?'':'updatePoints(this)'}" ${done?'disabled':''}>
+        ${done?'✓ ':''} ${m.name} (${m.date})
+      </button>`;
+    }).join('');
+  } catch(e) { document.getElementById('matchList').innerHTML = '<div class="status">Failed to load matches</div>'; }
+}
+
+async function updatePoints(btn) {
+  const matchId = btn.getAttribute('data-mid');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  document.getElementById('updateStatus').innerHTML = '<div class="status">Fetching scorecard and calculating points...</div>';
+  const r = await fetch('/api/update_points', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({match_id:matchId})});
+  const data = await r.json();
+  if (data.error) {
+    document.getElementById('updateStatus').innerHTML = `<div class="status" style="color:#f44336">${data.error}</div>`;
+    btn.disabled = false;
+    btn.textContent = 'Retry';
+  } else {
+    document.getElementById('updateStatus').innerHTML = `<div class="status" style="color:#4caf50">✓ ${data.match} — ${data.players_updated} players updated</div>`;
+    btn.classList.add('processed');
+    btn.textContent = '✓ ' + btn.textContent;
+    loadLeaderboard();
+  }
+}
+
+const saved = localStorage.getItem('auction_bidder');
+const isAdmin = saved ? JSON.parse(saved).is_admin : false;
+if (isAdmin) document.getElementById('adminSection').style.display = '';
+
+loadLeaderboard().then(loadMatches);
+</script>
+</body>
+</html>
