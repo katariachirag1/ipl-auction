@@ -10,7 +10,7 @@ from flask import Flask, g, jsonify, request, send_from_directory
 
 app = Flask(__name__, static_folder="static")
 DB_PATH = os.path.join(os.path.dirname(__file__), "auction.db")
-AUCTION_DURATION = 60  # 1 minute per player
+AUCTION_DURATION = 30  # 30 seconds per player
 MIN_DISPLAY_TIME = 10  # minimum seconds before auto-close can happen
 BUDGET = 100  # points per bidder
 
