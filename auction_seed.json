@@ -1,0 +1,1935 @@
+{
+  "bidders": [
+    {
+      "count": 15,
+      "name": "Kattu the chase",
+      "players": [
+        {
+          "name": "Arshdeep Singh",
+          "role": "Bowler",
+          "sold_price": 13,
+          "team": "PBKS"
+        },
+        {
+          "name": "Abhishek Sharma",
+          "role": "All-rounder",
+          "sold_price": 11,
+          "team": "SRH"
+        },
+        {
+          "name": "KL Rahul",
+          "role": "WK",
+          "sold_price": 9,
+          "team": "DC"
+        },
+        {
+          "name": "Nicholas Pooran",
+          "role": "WK",
+          "sold_price": 9,
+          "team": "LSG"
+        },
+        {
+          "name": "Kuldeep Yadav",
+          "role": "Bowler",
+          "sold_price": 8,
+          "team": "DC"
+        },
+        {
+          "name": "Suryakumar Yadav",
+          "role": "Batsman",
+          "sold_price": 8,
+          "team": "MI"
+        },
+        {
+          "name": "Cameron Green",
+          "role": "All-rounder",
+          "sold_price": 7,
+          "team": "KKR"
+        },
+        {
+          "name": "Sai Sudharsan",
+          "role": "Batsman",
+          "sold_price": 6,
+          "team": "GT"
+        },
+        {
+          "name": "Ayush Mhatre",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "CSK"
+        },
+        {
+          "name": "Finn Allen",
+          "role": "WK",
+          "sold_price": 1,
+          "team": "KKR"
+        },
+        {
+          "name": "Aiden Markram",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "LSG"
+        },
+        {
+          "name": "Avesh Khan",
+          "role": "Bowler",
+          "sold_price": 1,
+          "team": "LSG"
+        },
+        {
+          "name": "Mitchell Santner",
+          "role": "All-rounder",
+          "sold_price": 1,
+          "team": "MI"
+        },
+        {
+          "name": "Prabsimran Singh",
+          "role": "WK",
+          "sold_price": 1,
+          "team": "PBKS"
+        },
+        {
+          "name": "Devdutt Padikkal",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "RCB"
+        }
+      ],
+      "remaining_budget": 22
+    },
+    {
+      "count": 15,
+      "name": "KKR 2024",
+      "players": [
+        {
+          "name": "Shreyas Iyer",
+          "role": "Batsman",
+          "sold_price": 14,
+          "team": "PBKS"
+        },
+        {
+          "name": "Varun Chakravarthy",
+          "role": "Bowler",
+          "sold_price": 12,
+          "team": "KKR"
+        },
+        {
+          "name": "Sunil Narine",
+          "role": "All-rounder",
+          "sold_price": 11,
+          "team": "KKR"
+        },
+        {
+          "name": "Phil Salt",
+          "role": "WK",
+          "sold_price": 11,
+          "team": "RCB"
+        },
+        {
+          "name": "Shivam Dube",
+          "role": "All-rounder",
+          "sold_price": 10,
+          "team": "CSK"
+        },
+        {
+          "name": "Rajat Patidar",
+          "role": "Batsman",
+          "sold_price": 7,
+          "team": "RCB"
+        },
+        {
+          "name": "Matt Henry",
+          "role": "Bowler",
+          "sold_price": 4,
+          "team": "CSK"
+        },
+        {
+          "name": "Mitchell Starc",
+          "role": "Bowler",
+          "sold_price": 4,
+          "team": "DC"
+        },
+        {
+          "name": "MS Dhoni",
+          "role": "WK",
+          "sold_price": 2,
+          "team": "CSK"
+        },
+        {
+          "name": "Tristan Stubbs",
+          "role": "WK",
+          "sold_price": 2,
+          "team": "DC"
+        },
+        {
+          "name": "Rinku Singh",
+          "role": "Batsman",
+          "sold_price": 2,
+          "team": "KKR"
+        },
+        {
+          "name": "Matheesha Pathirana",
+          "role": "Bowler",
+          "sold_price": 2,
+          "team": "KKR"
+        },
+        {
+          "name": "Bhuvneshwar Kumar",
+          "role": "Bowler",
+          "sold_price": 2,
+          "team": "RCB"
+        },
+        {
+          "name": "Rahul Tripathi",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "KKR"
+        },
+        {
+          "name": "Anukul Roy",
+          "role": "All-rounder",
+          "sold_price": 1,
+          "team": "KKR"
+        }
+      ],
+      "remaining_budget": 15
+    },
+    {
+      "count": 15,
+      "name": "Max",
+      "players": [
+        {
+          "name": "Jasprit Bumrah",
+          "role": "Bowler",
+          "sold_price": 20,
+          "team": "MI"
+        },
+        {
+          "name": "Ishan Kishan",
+          "role": "WK",
+          "sold_price": 14,
+          "team": "SRH"
+        },
+        {
+          "name": "Sanju Samson",
+          "role": "WK",
+          "sold_price": 13,
+          "team": "CSK"
+        },
+        {
+          "name": "Axar Patel",
+          "role": "All-rounder",
+          "sold_price": 12,
+          "team": "DC"
+        },
+        {
+          "name": "Jofra Archer",
+          "role": "Bowler",
+          "sold_price": 6,
+          "team": "RR"
+        },
+        {
+          "name": "Kagiso Rabada",
+          "role": "Bowler",
+          "sold_price": 5,
+          "team": "GT"
+        },
+        {
+          "name": "Romario Shepherd",
+          "role": "All-rounder",
+          "sold_price": 4,
+          "team": "RCB"
+        },
+        {
+          "name": "Harshit Rana",
+          "role": "Bowler",
+          "sold_price": 2,
+          "team": "KKR"
+        },
+        {
+          "name": "Rovman Powell",
+          "role": "Batsman",
+          "sold_price": 2,
+          "team": "KKR"
+        },
+        {
+          "name": "Quinton de Kock",
+          "role": "WK",
+          "sold_price": 2,
+          "team": "MI"
+        },
+        {
+          "name": "Marcus Stoinis",
+          "role": "All-rounder",
+          "sold_price": 2,
+          "team": "PBKS"
+        },
+        {
+          "name": "Shimron Hetmyer",
+          "role": "Batsman",
+          "sold_price": 2,
+          "team": "RR"
+        },
+        {
+          "name": "Harshal Patel",
+          "role": "Bowler",
+          "sold_price": 2,
+          "team": "SRH"
+        },
+        {
+          "name": "Liam Livingstone",
+          "role": "All-rounder",
+          "sold_price": 2,
+          "team": "SRH"
+        },
+        {
+          "name": "Shivam Mavi",
+          "role": "Bowler",
+          "sold_price": 1,
+          "team": "SRH"
+        }
+      ],
+      "remaining_budget": 11
+    },
+    {
+      "count": 15,
+      "name": "Rahul",
+      "players": [
+        {
+          "name": "Yashasvi Jaiswal",
+          "role": "Batsman",
+          "sold_price": 14,
+          "team": "RR"
+        },
+        {
+          "name": "Hardik Pandya",
+          "role": "All-rounder",
+          "sold_price": 13,
+          "team": "MI"
+        },
+        {
+          "name": "Travis Head",
+          "role": "Batsman",
+          "sold_price": 13,
+          "team": "SRH"
+        },
+        {
+          "name": "Dewald Brevis",
+          "role": "Batsman",
+          "sold_price": 11,
+          "team": "CSK"
+        },
+        {
+          "name": "Marco Jansen",
+          "role": "All-rounder",
+          "sold_price": 11,
+          "team": "PBKS"
+        },
+        {
+          "name": "Ruturaj Gaikwad",
+          "role": "Batsman",
+          "sold_price": 8,
+          "team": "CSK"
+        },
+        {
+          "name": "Rashid Khan",
+          "role": "Bowler",
+          "sold_price": 6,
+          "team": "GT"
+        },
+        {
+          "name": "Tilak Varma",
+          "role": "Batsman",
+          "sold_price": 6,
+          "team": "MI"
+        },
+        {
+          "name": "Yuzvendra Chahal",
+          "role": "Bowler",
+          "sold_price": 5,
+          "team": "PBKS"
+        },
+        {
+          "name": "Jos Buttler",
+          "role": "WK",
+          "sold_price": 4,
+          "team": "GT"
+        },
+        {
+          "name": "Nitish Reddy",
+          "role": "All-rounder",
+          "sold_price": 3,
+          "team": "SRH"
+        },
+        {
+          "name": "Jason Holder",
+          "role": "All-rounder",
+          "sold_price": 2,
+          "team": "GT"
+        },
+        {
+          "name": "Trent Boult",
+          "role": "Bowler",
+          "sold_price": 2,
+          "team": "MI"
+        },
+        {
+          "name": "R Sai Kishore",
+          "role": "Bowler",
+          "sold_price": 1,
+          "team": "GT"
+        },
+        {
+          "name": "Michell Owen",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "PBKS"
+        }
+      ],
+      "remaining_budget": 0
+    },
+    {
+      "count": 15,
+      "name": "Dheeraj",
+      "players": [
+        {
+          "name": "Virat Kohli",
+          "role": "Batsman",
+          "sold_price": 18,
+          "team": "RCB"
+        },
+        {
+          "name": "Shubman Gill",
+          "role": "Batsman",
+          "sold_price": 12,
+          "team": "GT"
+        },
+        {
+          "name": "Rohit Sharma",
+          "role": "Batsman",
+          "sold_price": 10,
+          "team": "MI"
+        },
+        {
+          "name": "Mitchell Marsh",
+          "role": "All-rounder",
+          "sold_price": 8,
+          "team": "LSG"
+        },
+        {
+          "name": "Riyan Parag",
+          "role": "All-rounder",
+          "sold_price": 8,
+          "team": "RR"
+        },
+        {
+          "name": "Heinrich Klaasen",
+          "role": "WK",
+          "sold_price": 8,
+          "team": "SRH"
+        },
+        {
+          "name": "Rishabh Pant",
+          "role": "WK",
+          "sold_price": 7,
+          "team": "LSG"
+        },
+        {
+          "name": "Tim David",
+          "role": "Batsman",
+          "sold_price": 7,
+          "team": "RCB"
+        },
+        {
+          "name": "David Miller",
+          "role": "Batsman",
+          "sold_price": 6,
+          "team": "DC"
+        },
+        {
+          "name": "Mohammed Shami",
+          "role": "Bowler",
+          "sold_price": 5,
+          "team": "LSG"
+        },
+        {
+          "name": "Ravindra Jadeja",
+          "role": "All-rounder",
+          "sold_price": 4,
+          "team": "RR"
+        },
+        {
+          "name": "Sam Curran",
+          "role": "All-rounder",
+          "sold_price": 3,
+          "team": "RR"
+        },
+        {
+          "name": "Abhishek Porel",
+          "role": "WK",
+          "sold_price": 2,
+          "team": "DC"
+        },
+        {
+          "name": "Sarfaraz Khan",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "CSK"
+        },
+        {
+          "name": "Sherfane Rutherford",
+          "role": "Batsman",
+          "sold_price": 1,
+          "team": "MI"
+        }
+      ],
+      "remaining_budget": 0
+    }
+  ],
+  "match_points": [
+    {
+      "breakdown": "{\"runs\": 12, \"fours\": 1, \"sixes\": 2, \"wickets\": 50, \"maidens\": 0, \"catches\": 16}",
+      "id": 1,
+      "match_date": "2025-04-09",
+      "match_id": "71213f27-c274-48b0-97f7-ec74e895dcbe",
+      "match_name": "Gujarat Titans vs Rajasthan Royals, 23rd Match",
+      "player_id": 52,
+      "player_name": "Rashid Khan",
+      "points": 81
+    },
+    {
+      "breakdown": "{\"runs\": 6, \"fours\": 0, \"sixes\": 2, \"wickets\": 0, \"maidens\": 0, \"econ_bonus\": 4}",
+      "id": 2,
+      "match_date": "2025-03-29",
+      "match_id": "f5ed540f-15c7-4189-a5d4-e54be746a522",
+      "match_name": "Gujarat Titans vs Mumbai Indians, 9th Match",
+      "player_id": 52,
+      "player_name": "Rashid Khan",
+      "points": 12
+    },
+    {
+      "breakdown": "{\"wickets\": 0, \"maidens\": 0}",
+      "id": 3,
+      "match_date": "2025-05-18",
+      "match_id": "481f7248-302b-4aa4-9af8-45fd85afdf83",
+      "match_name": "Delhi Capitals vs Gujarat Titans, 60th Match",
+      "player_id": 52,
+      "player_name": "Rashid Khan",
+      "points": 0
+    },
+    {
+      "breakdown": "{\"wickets\": 25, \"maidens\": 0, \"econ_bonus\": -2, \"runs\": 12, \"fours\": 1, \"sixes\": 2}",
+      "id": 4,
+      "match_date": "2025-05-25",
+      "match_id": "f16e5b1e-1437-475b-8e8c-07d1d736f8a7",
+      "match_name": "Gujarat Titans vs Chennai Super Kings, 67th Match",
+      "player_id": 52,
+      "player_name": "Rashid Khan",
+      "points": 38
+    }
+  ],
+  "sold": [
+    {
+      "buyer": "Max",
+      "name": "Jasprit Bumrah",
+      "price": 20,
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Virat Kohli",
+      "price": 18,
+      "role": "Batsman",
+      "team": "RCB"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Shreyas Iyer",
+      "price": 14,
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Yashasvi Jaiswal",
+      "price": 14,
+      "role": "Batsman",
+      "team": "RR"
+    },
+    {
+      "buyer": "Max",
+      "name": "Ishan Kishan",
+      "price": 14,
+      "role": "WK",
+      "team": "SRH"
+    },
+    {
+      "buyer": "Max",
+      "name": "Sanju Samson",
+      "price": 13,
+      "role": "WK",
+      "team": "CSK"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Hardik Pandya",
+      "price": 13,
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Arshdeep Singh",
+      "price": 13,
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Travis Head",
+      "price": 13,
+      "role": "Batsman",
+      "team": "SRH"
+    },
+    {
+      "buyer": "Max",
+      "name": "Axar Patel",
+      "price": 12,
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Shubman Gill",
+      "price": 12,
+      "role": "Batsman",
+      "team": "GT"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Varun Chakravarthy",
+      "price": 12,
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Dewald Brevis",
+      "price": 11,
+      "role": "Batsman",
+      "team": "CSK"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Sunil Narine",
+      "price": 11,
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Marco Jansen",
+      "price": 11,
+      "role": "All-rounder",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Phil Salt",
+      "price": 11,
+      "role": "WK",
+      "team": "RCB"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Abhishek Sharma",
+      "price": 11,
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Shivam Dube",
+      "price": 10,
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Rohit Sharma",
+      "price": 10,
+      "role": "Batsman",
+      "team": "MI"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "KL Rahul",
+      "price": 9,
+      "role": "WK",
+      "team": "DC"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Nicholas Pooran",
+      "price": 9,
+      "role": "WK",
+      "team": "LSG"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Ruturaj Gaikwad",
+      "price": 8,
+      "role": "Batsman",
+      "team": "CSK"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Kuldeep Yadav",
+      "price": 8,
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Mitchell Marsh",
+      "price": 8,
+      "role": "All-rounder",
+      "team": "LSG"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Suryakumar Yadav",
+      "price": 8,
+      "role": "Batsman",
+      "team": "MI"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Riyan Parag",
+      "price": 8,
+      "role": "All-rounder",
+      "team": "RR"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Heinrich Klaasen",
+      "price": 8,
+      "role": "WK",
+      "team": "SRH"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Cameron Green",
+      "price": 7,
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Rishabh Pant",
+      "price": 7,
+      "role": "WK",
+      "team": "LSG"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Rajat Patidar",
+      "price": 7,
+      "role": "Batsman",
+      "team": "RCB"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Tim David",
+      "price": 7,
+      "role": "Batsman",
+      "team": "RCB"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "David Miller",
+      "price": 6,
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Rashid Khan",
+      "price": 6,
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Sai Sudharsan",
+      "price": 6,
+      "role": "Batsman",
+      "team": "GT"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Tilak Varma",
+      "price": 6,
+      "role": "Batsman",
+      "team": "MI"
+    },
+    {
+      "buyer": "Max",
+      "name": "Jofra Archer",
+      "price": 6,
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "buyer": "Max",
+      "name": "Kagiso Rabada",
+      "price": 5,
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Mohammed Shami",
+      "price": 5,
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Yuzvendra Chahal",
+      "price": 5,
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Matt Henry",
+      "price": 4,
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Mitchell Starc",
+      "price": 4,
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Jos Buttler",
+      "price": 4,
+      "role": "WK",
+      "team": "GT"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Ravindra Jadeja",
+      "price": 4,
+      "role": "All-rounder",
+      "team": "RR"
+    },
+    {
+      "buyer": "Max",
+      "name": "Romario Shepherd",
+      "price": 4,
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Sam Curran",
+      "price": 3,
+      "role": "All-rounder",
+      "team": "RR"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Nitish Reddy",
+      "price": 3,
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "MS Dhoni",
+      "price": 2,
+      "role": "WK",
+      "team": "CSK"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Tristan Stubbs",
+      "price": 2,
+      "role": "WK",
+      "team": "DC"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Abhishek Porel",
+      "price": 2,
+      "role": "WK",
+      "team": "DC"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Jason Holder",
+      "price": 2,
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Rinku Singh",
+      "price": 2,
+      "role": "Batsman",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Max",
+      "name": "Harshit Rana",
+      "price": 2,
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Max",
+      "name": "Rovman Powell",
+      "price": 2,
+      "role": "Batsman",
+      "team": "KKR"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Matheesha Pathirana",
+      "price": 2,
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Trent Boult",
+      "price": 2,
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "buyer": "Max",
+      "name": "Quinton de Kock",
+      "price": 2,
+      "role": "WK",
+      "team": "MI"
+    },
+    {
+      "buyer": "Max",
+      "name": "Marcus Stoinis",
+      "price": 2,
+      "role": "All-rounder",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "Max",
+      "name": "Shimron Hetmyer",
+      "price": 2,
+      "role": "Batsman",
+      "team": "RR"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Bhuvneshwar Kumar",
+      "price": 2,
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "buyer": "Max",
+      "name": "Harshal Patel",
+      "price": 2,
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "buyer": "Max",
+      "name": "Liam Livingstone",
+      "price": 2,
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Ayush Mhatre",
+      "price": 1,
+      "role": "Batsman",
+      "team": "CSK"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Sarfaraz Khan",
+      "price": 1,
+      "role": "Batsman",
+      "team": "CSK"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "R Sai Kishore",
+      "price": 1,
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Rahul Tripathi",
+      "price": 1,
+      "role": "Batsman",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Finn Allen",
+      "price": 1,
+      "role": "WK",
+      "team": "KKR"
+    },
+    {
+      "buyer": "KKR 2024",
+      "name": "Anukul Roy",
+      "price": 1,
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Aiden Markram",
+      "price": 1,
+      "role": "Batsman",
+      "team": "LSG"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Avesh Khan",
+      "price": 1,
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Mitchell Santner",
+      "price": 1,
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "buyer": "Dheeraj",
+      "name": "Sherfane Rutherford",
+      "price": 1,
+      "role": "Batsman",
+      "team": "MI"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Prabsimran Singh",
+      "price": 1,
+      "role": "WK",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "Rahul",
+      "name": "Michell Owen",
+      "price": 1,
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "buyer": "Kattu the chase",
+      "name": "Devdutt Padikkal",
+      "price": 1,
+      "role": "Batsman",
+      "team": "RCB"
+    },
+    {
+      "buyer": "Max",
+      "name": "Shivam Mavi",
+      "price": 1,
+      "role": "Bowler",
+      "team": "SRH"
+    }
+  ],
+  "unsold": [
+    {
+      "name": "Abdul Samad",
+      "role": "All-rounder",
+      "team": "LSG"
+    },
+    {
+      "name": "Abhinandan Singh",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Adam Milne",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Ajay Mandal",
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "name": "Ajinkya Rahane",
+      "role": "Batsman",
+      "team": "KKR"
+    },
+    {
+      "name": "Akash Deep",
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "name": "Akash Singh",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Akeal Hosein",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Akshat Raghuvanshi",
+      "role": "Batsman",
+      "team": "LSG"
+    },
+    {
+      "name": "Allah Ghazanfar",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Aman Khan",
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "name": "Aman Rao",
+      "role": "Batsman",
+      "team": "RR"
+    },
+    {
+      "name": "Amit Kumar",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Angkrish Raghuvanshi",
+      "role": "Batsman",
+      "team": "KKR"
+    },
+    {
+      "name": "Aniket Verma",
+      "role": "Batsman",
+      "team": "SRH"
+    },
+    {
+      "name": "Anrich Nortje",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Anshul Kamboj",
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "name": "Anuj Rawat",
+      "role": "WK",
+      "team": "GT"
+    },
+    {
+      "name": "Arjun Tendulkar",
+      "role": "All-rounder",
+      "team": "LSG"
+    },
+    {
+      "name": "Arshad Khan",
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "name": "Arshin Kulkarni",
+      "role": "All-rounder",
+      "team": "LSG"
+    },
+    {
+      "name": "Ashok Sharma",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Ashutosh Sharma",
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "name": "Ashwani Kumar",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Atharva Ankolekar",
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "name": "Auqib Dar",
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "name": "Ayush Badoni",
+      "role": "Batsman",
+      "team": "LSG"
+    },
+    {
+      "name": "Azmatullah Omarzai",
+      "role": "All-rounder",
+      "team": "PBKS"
+    },
+    {
+      "name": "Ben Duckett",
+      "role": "WK",
+      "team": "DC"
+    },
+    {
+      "name": "Ben Dwarshuis",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Brijesh Sharma",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Brydon Carse",
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "name": "Cooper Connolly",
+      "role": "All-rounder",
+      "team": "PBKS"
+    },
+    {
+      "name": "Corbin Bosch",
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "name": "Daksh Kamra",
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "name": "Danish Melawar",
+      "role": "Batsman",
+      "team": "MI"
+    },
+    {
+      "name": "Deepak Chahar",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Dhruv Jurel",
+      "role": "WK",
+      "team": "RR"
+    },
+    {
+      "name": "Digvesh Singh",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Donovan Ferreira",
+      "role": "WK",
+      "team": "RR"
+    },
+    {
+      "name": "Dushmantha Chameera",
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "name": "Ehsan Malinga",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Glenn Phillips",
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "name": "Gurjapneet Singh",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Gurnoor Brar",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Harnoor Pannu",
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "name": "Harpreet Brar",
+      "role": "All-rounder",
+      "team": "PBKS"
+    },
+    {
+      "name": "Harsh Dubey",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Himmat Singh",
+      "role": "Batsman",
+      "team": "LSG"
+    },
+    {
+      "name": "Ishant Sharma",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Jack Edwards",
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "name": "Jacob Bethell",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "Jacob Duffy",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Jamie Overton",
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "name": "Jayant Yadav",
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "name": "Jaydev Unadkat",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Jitesh Sharma",
+      "role": "WK",
+      "team": "RCB"
+    },
+    {
+      "name": "Jordan Cox",
+      "role": "WK",
+      "team": "RCB"
+    },
+    {
+      "name": "Josh Hazlewood",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Josh Inglis",
+      "role": "WK",
+      "team": "LSG"
+    },
+    {
+      "name": "Kamindu Mendis",
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "name": "Kanishk Chouhan",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "Kartik Sharma",
+      "role": "WK",
+      "team": "CSK"
+    },
+    {
+      "name": "Kartik Tyagi",
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "name": "Karun Nair",
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "name": "Khaleel Ahmed",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Krains Fuletra",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Krunal Pandya",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "Kuldeep Sen",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Kumar Khushagra",
+      "role": "WK",
+      "team": "GT"
+    },
+    {
+      "name": "Kwena Maphaka",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Kyle Jamieson",
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "name": "Lhuan de Pretorius",
+      "role": "WK",
+      "team": "RR"
+    },
+    {
+      "name": "Lockie Ferguson",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Luke Wood",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Lungi Ngidi",
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "name": "M Siddharth",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Madhav Tiwari",
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "name": "Manav Suthar",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Mangesh Yadav",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "Manish Pandey",
+      "role": "Batsman",
+      "team": "KKR"
+    },
+    {
+      "name": "Matthew Breetzke",
+      "role": "Batsman",
+      "team": "LSG"
+    },
+    {
+      "name": "Matthew Short",
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "name": "Mayank Markande",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Mayank Rawat",
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "name": "Mayank Yadav",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Mohammad Izhar",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Mohammed Siraj",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Mohsin Khan",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Mukesh Choudhary",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Mukesh Kumar",
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "name": "Mukul Choudhary",
+      "role": "WK",
+      "team": "LSG"
+    },
+    {
+      "name": "Musheer Khan",
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "name": "Mustafizur Rahman",
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "name": "Naman Dhir",
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "name": "Naman Tiwari",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Nandre Burger",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Nathan Ellis",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Nehal Wadhera",
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "name": "Nishant Sindhu",
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "name": "Nitish Rana",
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "name": "Noor Ahmad",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Nuwan Thushara",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Onkar Tarmale",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Pat Cummins",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Pathum Nissanka",
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "name": "Praful Hinge",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Prashant Solanki",
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "name": "Prashant Veer",
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "name": "Prasidh Krishna",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Pravin Dubey",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Prince Yadav",
+      "role": "Bowler",
+      "team": "LSG"
+    },
+    {
+      "name": "Prithvi Shaw",
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "name": "Prithviraj Yarra",
+      "role": "Bowler",
+      "team": "GT"
+    },
+    {
+      "name": "Priyansh Arya",
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "name": "Pyla Avinash",
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "name": "Rachin Ravindra",
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "name": "Raghu Sharma",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Rahul Chahar",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Rahul Tewatia",
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "name": "Raj Bawa",
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "name": "Ramandeep Singh",
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "name": "Ramkrishna Ghosh",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Rasikh Dar",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Ravi Bishnoi",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Ravi Singh",
+      "role": "WK",
+      "team": "RR"
+    },
+    {
+      "name": "Robin Minz",
+      "role": "WK",
+      "team": "MI"
+    },
+    {
+      "name": "Ryan Rickelton",
+      "role": "WK",
+      "team": "MI"
+    },
+    {
+      "name": "Sahil Parakh",
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "name": "Sakib Hussain",
+      "role": "Bowler",
+      "team": "SRH"
+    },
+    {
+      "name": "Salil Arora",
+      "role": "WK",
+      "team": "SRH"
+    },
+    {
+      "name": "Sameer Rizvi",
+      "role": "Batsman",
+      "team": "DC"
+    },
+    {
+      "name": "Sandeep Sharma",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Sarthak Ranjan",
+      "role": "All-rounder",
+      "team": "KKR"
+    },
+    {
+      "name": "Satvik Deswal",
+      "role": "Batsman",
+      "team": "RCB"
+    },
+    {
+      "name": "Shahbaz Ahmed",
+      "role": "All-rounder",
+      "team": "LSG"
+    },
+    {
+      "name": "Shahrukh Khan",
+      "role": "Batsman",
+      "team": "GT"
+    },
+    {
+      "name": "Shardul Thakur",
+      "role": "Bowler",
+      "team": "MI"
+    },
+    {
+      "name": "Shashank Singh",
+      "role": "Batsman",
+      "team": "PBKS"
+    },
+    {
+      "name": "Shivang Kumar",
+      "role": "All-rounder",
+      "team": "SRH"
+    },
+    {
+      "name": "Shreyas Gopal",
+      "role": "Bowler",
+      "team": "CSK"
+    },
+    {
+      "name": "Shubham Dubey",
+      "role": "Batsman",
+      "team": "RR"
+    },
+    {
+      "name": "Smaran Ravichandran",
+      "role": "Batsman",
+      "team": "SRH"
+    },
+    {
+      "name": "Suryansh Shedge",
+      "role": "All-rounder",
+      "team": "PBKS"
+    },
+    {
+      "name": "Sushant Mishra",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Suyash Sharma",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Swapnil Singh",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "T Natarajan",
+      "role": "Bowler",
+      "team": "DC"
+    },
+    {
+      "name": "Tejasvi Singh",
+      "role": "WK",
+      "team": "KKR"
+    },
+    {
+      "name": "Tim Seifert",
+      "role": "WK",
+      "team": "KKR"
+    },
+    {
+      "name": "Tom Banton",
+      "role": "WK",
+      "team": "GT"
+    },
+    {
+      "name": "Tripurana Vijay",
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "name": "Tushar Deshpande",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Umran Malik",
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "name": "Urvil Patel",
+      "role": "WK",
+      "team": "CSK"
+    },
+    {
+      "name": "Vaibhav Arora",
+      "role": "Bowler",
+      "team": "KKR"
+    },
+    {
+      "name": "Vaibhav Suryavanshi",
+      "role": "Batsman",
+      "team": "RR"
+    },
+    {
+      "name": "Venkatesh Iyer",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "Vicky Ostwal",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Vignesh Puthur",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Vihaan Malhotra",
+      "role": "All-rounder",
+      "team": "RCB"
+    },
+    {
+      "name": "Vipraj Nigam",
+      "role": "All-rounder",
+      "team": "DC"
+    },
+    {
+      "name": "Vishal Nishad",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Vishnu Vinod",
+      "role": "WK",
+      "team": "PBKS"
+    },
+    {
+      "name": "Vyshak Vijaykumar",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Wanindu Hasaranga",
+      "role": "All-rounder",
+      "team": "LSG"
+    },
+    {
+      "name": "Washington Sundar",
+      "role": "All-rounder",
+      "team": "GT"
+    },
+    {
+      "name": "Will Jacks",
+      "role": "All-rounder",
+      "team": "MI"
+    },
+    {
+      "name": "Xavier Bartlett",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Yash Dayal",
+      "role": "Bowler",
+      "team": "RCB"
+    },
+    {
+      "name": "Yash Punja",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Yash Thakur",
+      "role": "Bowler",
+      "team": "PBKS"
+    },
+    {
+      "name": "Yudhvir Charak",
+      "role": "Bowler",
+      "team": "RR"
+    },
+    {
+      "name": "Zak Foulkes",
+      "role": "All-rounder",
+      "team": "CSK"
+    },
+    {
+      "name": "Zeeshan Ansari",
+      "role": "Bowler",
+      "team": "SRH"
+    }
+  ]
+}

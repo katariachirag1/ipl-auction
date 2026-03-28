@@ -2,6 +2,7 @@
 """IPL Auction Bidding App - Minimal Flask backend."""
 
 import json
+import logging
 import os
 import random
 import sqlite3
@@ -10,6 +11,7 @@ from flask import Flask, g, jsonify, request, send_from_directory
 
 app = Flask(__name__, static_folder="static")
 DB_PATH = os.path.join(os.path.dirname(__file__), "auction.db")
+logger = logging.getLogger(__name__)
 AUCTION_DURATION = 30  # 30 seconds per player
 MIN_DISPLAY_TIME = 10  # minimum seconds before auto-close can happen
 BUDGET = 100  # points per bidder
@@ -203,6 +205,11 @@ def _seed_players(db):
 
 @app.route("/")
 def index():
+    return send_from_directory("static", "points.html")
+
+
+@app.route("/auction")
+def auction_page():
     return send_from_directory("static", "index.html")
 
 
@@ -620,6 +627,35 @@ def import_backup():
         return jsonify({"error": str(e)}), 500
 
 
+def _auto_import_seed():
+    """Auto-import auction results from seed file if DB has no bidders."""
+    seed_path = os.path.join(os.path.dirname(__file__), "auction_seed.json")
+    if not os.path.exists(seed_path):
+        return
+    db = sqlite3.connect(DB_PATH)
+    db.row_factory = sqlite3.Row
+    count = db.execute("SELECT COUNT(*) FROM bidders").fetchone()[0]
+    if count > 0:
+        db.close()
+        return
+    logger.info("Auto-importing auction seed data...")
+    with open(seed_path) as f:
+        data = json.load(f)
+    for i, bidder_data in enumerate(data.get("bidders", [])):
+        name = bidder_data["name"]
+        budget = bidder_data.get("remaining_budget", BUDGET)
+        is_admin = 1 if i == 0 else 0
+        db.execute("INSERT INTO bidders (name, budget, is_admin) VALUES (?,?,?)", (name, budget, is_admin))
+    for sold in data.get("sold", []):
+        buyer = db.execute("SELECT id FROM bidders WHERE name=?", (sold.get("buyer", ""),)).fetchone()
+        if buyer:
+            db.execute("UPDATE players SET sold_to=?, sold_price=? WHERE name=?",
+                       (buyer["id"], sold.get("price", 0), sold["name"]))
+    db.commit()
+    db.close()
+    logger.info("Seed data imported successfully")
+
+
 def _close_auction(db, state):
     pid = state["current_player_id"]
     if state["highest_bidder_id"] and state["highest_bid"]:
@@ -636,7 +672,9 @@ def _close_auction(db, state):
 
 if __name__ == "__main__":
     init_db()
+    _auto_import_seed()
     app.run(debug=True, host="0.0.0.0", port=5050)
 else:
     # For gunicorn / production
     init_db()
+    _auto_import_seed()
