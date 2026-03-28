@@ -470,9 +470,9 @@ def get_matches():
     try:
         matches = fetch_ipl_matches()
         # Only completed matches
-        completed = [m for m in matches if m.get("matchEnded", False)]
+        completed = [m for m in matches if m.get("matchStarted", False)]
         completed.sort(key=lambda m: m.get("date", ""), reverse=True)
-        return jsonify({"matches": completed[:20]})
+        return jsonify({"matches": completed[:30]})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -501,8 +501,13 @@ def update_points():
         count = 0
         for pname, pdata in player_points.items():
             pts = pdata["points"]
-            # Find if this player is in our auction
+            # Find if this player is in our auction — try exact match first, then fuzzy
             player = db.execute("SELECT id, sold_to FROM players WHERE name=?", (pname,)).fetchone()
+            if not player:
+                # Try matching by last name
+                last_name = pname.split()[-1] if pname else ""
+                if last_name:
+                    player = db.execute("SELECT id, sold_to FROM players WHERE name LIKE ?", (f"%{last_name}%",)).fetchone()
             if player and player["sold_to"]:
                 db.execute(
                     "INSERT INTO match_points (match_id, match_name, match_date, player_id, player_name, points, breakdown) VALUES (?,?,?,?,?,?,?)",
