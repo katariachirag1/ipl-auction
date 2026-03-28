@@ -48,24 +48,33 @@ def fetch_scorecard(match_id):
 
 
 def fetch_ipl_matches(series_id=None):
-    """Fetch IPL match list."""
+    """Fetch IPL match list — tries series first, falls back to matches endpoint."""
     if not series_id:
-        # Search for IPL 2026 or latest IPL
-        url = f"{BASE_URL}/series?apikey={API_KEY}&search=IPL"
+        # Try series search first
+        url = f"{BASE_URL}/series?apikey={API_KEY}&search=IPL%202026"
+        req = urllib.request.Request(url)
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode())
+            series_list = data.get("data", [])
+            if series_list:
+                series_id = series_list[0]["id"]
+        except Exception:
+            pass
+
+    if series_id:
+        url = f"{BASE_URL}/series_info?apikey={API_KEY}&id={series_id}"
         req = urllib.request.Request(url)
         with urllib.request.urlopen(req, timeout=15) as resp:
             data = json.loads(resp.read().decode())
-        series_list = data.get("data", [])
-        if series_list:
-            series_id = series_list[0]["id"]  # latest IPL
-        else:
-            return []
+        return data.get("data", {}).get("matchList", [])
 
-    url = f"{BASE_URL}/series_info?apikey={API_KEY}&id={series_id}"
+    # Fallback: use matches endpoint to find IPL 2026
+    url = f"{BASE_URL}/matches?apikey={API_KEY}&offset=0"
     req = urllib.request.Request(url)
     with urllib.request.urlopen(req, timeout=15) as resp:
         data = json.loads(resp.read().decode())
-    return data.get("data", {}).get("matchList", [])
+    return [m for m in data.get("data", []) if "Indian Premier League 2026" in m.get("name", "")]
 
 
 def calculate_fantasy_points(scorecard):
