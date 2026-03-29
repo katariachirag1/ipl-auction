@@ -43,7 +43,13 @@ h2 { color: #ffd700; margin: 16px 0 8px; font-size: 1.2em; }
     <p style="color:#888;font-size:0.85em;margin-bottom:8px;">Click a match to fetch scorecard and calculate fantasy points</p>
     <div id="matchList"><div class="status">Loading matches...</div></div>
     <div id="updateStatus"></div>
-    <button class="match-btn" style="background:#4caf50;color:#fff;margin-top:8px" onclick="saveState()">💾 Save State (persist across restarts)</button>
+  </div>
+
+  <div style="text-align:center;margin:12px 0;">
+    <button class="match-btn" onclick="savePoints()" style="background:#4caf50;color:#fff;font-size:1em;padding:10px 20px;">💾 Save Points</button>
+    <label class="match-btn" style="background:#2196f3;color:#fff;font-size:1em;padding:10px 20px;cursor:pointer;display:inline-block;">
+      📂 Restore Points <input type="file" accept=".json" onchange="restorePoints(event)" style="display:none">
+    </label>
   </div>
 
   <h2>Leaderboard</h2>
@@ -123,6 +129,28 @@ async function updatePoints(btn) {
 const saved = localStorage.getItem('auction_bidder');
 const isAdmin = saved ? JSON.parse(saved).is_admin : false;
 if (isAdmin) document.getElementById('adminSection').style.display = '';
+
+async function savePoints() {
+  const r = await fetch('/api/export');
+  const data = await r.json();
+  const blob = new Blob([JSON.stringify(data.results, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ipl_points_backup.json';
+  a.click();
+}
+
+async function restorePoints(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const text = await file.text();
+  const data = JSON.parse(text);
+  const r = await fetch('/api/import_backup', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+  const result = await r.json();
+  if (result.error) alert(result.error);
+  else { alert('Points restored!'); loadLeaderboard(); }
+  event.target.value = '';
+}
 
 loadLeaderboard().then(loadMatches);
 </script>

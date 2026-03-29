@@ -11,79 +11,7 @@ from flask import Flask, g, jsonify, request, send_from_directory
 
 app = Flask(__name__, static_folder="static")
 DB_PATH = os.path.join(os.path.dirname(__file__), "auction.db")
-DATABASE_URL = os.environ.get("DATABASE_URL", "")
-USE_POSTGRES = DATABASE_URL.startswith("postgres")
 logger = logging.getLogger(__name__)
-
-if USE_POSTGRES:
-    import psycopg2
-    import psycopg2.extras
-
-    def _pg_conn():
-        conn = psycopg2.connect(DATABASE_URL)
-        conn.autocommit = True
-        return conn
-
-    def _pg_init():
-        conn = _pg_conn()
-        cur = conn.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS match_points (
-                id SERIAL PRIMARY KEY,
-                match_id TEXT NOT NULL,
-                match_name TEXT,
-                match_date TEXT,
-                player_id INTEGER NOT NULL,
-                player_name TEXT NOT NULL,
-                points REAL NOT NULL DEFAULT 0,
-                breakdown TEXT,
-                UNIQUE(match_id, player_name)
-            )
-        """)
-        conn.close()
-
-    def _pg_get_match_points():
-        conn = _pg_conn()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM match_points ORDER BY id")
-        cols = [desc[0] for desc in cur.description]
-        rows = [dict(zip(cols, r)) for r in cur.fetchall()]
-        conn.close()
-        return rows
-
-    def _pg_save_match_points(match_id, match_name, match_date, player_id, player_name, points, breakdown):
-        conn = _pg_conn()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO match_points (match_id, match_name, match_date, player_id, player_name, points, breakdown) VALUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (match_id, player_name) DO NOTHING",
-            (match_id, match_name, match_date, player_id, player_name, points, breakdown),
-        )
-        conn.close()
-
-    def _pg_match_exists(match_id):
-        conn = _pg_conn()
-        cur = conn.cursor()
-        cur.execute("SELECT match_id FROM match_points WHERE match_id=%s LIMIT 1", (match_id,))
-        exists = cur.fetchone() is not None
-        conn.close()
-        return exists
-
-    def _pg_get_player_points(player_id):
-        conn = _pg_conn()
-        cur = conn.cursor()
-        cur.execute("SELECT COALESCE(SUM(points),0) FROM match_points WHERE player_id=%s", (player_id,))
-        pts = cur.fetchone()[0]
-        conn.close()
-        return pts
-
-    def _pg_get_processed_matches():
-        conn = _pg_conn()
-        cur = conn.cursor()
-        cur.execute("SELECT DISTINCT match_id, match_name, match_date FROM match_points ORDER BY match_date DESC")
-        cols = [desc[0] for desc in cur.description]
-        rows = [dict(zip(cols, r)) for r in cur.fetchall()]
-        conn.close()
-        return rows
 AUCTION_DURATION = 30  # 30 seconds per player
 MIN_DISPLAY_TIME = 10  # minimum seconds before auto-close can happen
 BUDGET = 100  # points per bidder
@@ -91,12 +19,8 @@ BUDGET = 100  # points per bidder
 
 def get_db():
     if "db" not in g:
-        if USE_POSTGRES:
-            g.db = psycopg2.connect(DATABASE_URL)
-            g.db.autocommit = True
-        else:
-            g.db = sqlite3.connect(DB_PATH)
-            g.db.row_factory = sqlite3.Row
+        g.db = sqlite3.connect(DB_PATH)
+        g.db.row_factory = sqlite3.Row
     return g.db
 
 
@@ -107,105 +31,9 @@ def close_db(exc):
         db.close()
 
 
-def _q(sql):
-    """Convert SQLite ? placeholders to Postgres %s."""
-    if USE_POSTGRES:
-        return sql.replace("?", "%s")
-    return sql
-
-
-def _fetchone(db, sql, params=None):
-    cur = db.cursor()
-    cur.execute(_q(sql), params or ())
-    row = cur.fetchone()
-    if row is None:
-        return None
-    if USE_POSTGRES:
-        cols = [desc[0] for desc in cur.description]
-        return dict(zip(cols, row))
-    return row
-
-
-def _fetchall(db, sql, params=None):
-    cur = db.cursor()
-    cur.execute(_q(sql), params or ())
-    rows = cur.fetchall()
-    if USE_POSTGRES:
-        cols = [desc[0] for desc in cur.description]
-        return [dict(zip(cols, r)) for r in rows]
-    return [dict(r) for r in rows]
-
-
-def _execute(db, sql, params=None):
-    cur = db.cursor()
-    cur.execute(_q(sql), params or ())
-    return cur
-
-
 def init_db():
-    if USE_POSTGRES:
-        db = psycopg2.connect(DATABASE_URL)
-        cur = db.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS bidders (
-                id SERIAL PRIMARY KEY,
-                name TEXT UNIQUE NOT NULL,
-                budget REAL NOT NULL DEFAULT 100,
-                is_admin INTEGER NOT NULL DEFAULT 0
-            );
-            CREATE TABLE IF NOT EXISTS players (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                team TEXT NOT NULL,
-                role TEXT NOT NULL DEFAULT '',
-                base_price REAL NOT NULL DEFAULT 1,
-                sold_to INTEGER REFERENCES bidders(id),
-                sold_price REAL
-            );
-            CREATE TABLE IF NOT EXISTS auction_state (
-                id INTEGER PRIMARY KEY CHECK (id = 1),
-                current_player_id INTEGER REFERENCES players(id),
-                started_at REAL,
-                highest_bid REAL DEFAULT 0,
-                highest_bidder_id INTEGER REFERENCES bidders(id)
-            );
-            CREATE TABLE IF NOT EXISTS bids (
-                id SERIAL PRIMARY KEY,
-                player_id INTEGER NOT NULL REFERENCES players(id),
-                bidder_id INTEGER NOT NULL REFERENCES bidders(id),
-                amount REAL NOT NULL,
-                ts REAL NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS passes (
-                player_id INTEGER NOT NULL,
-                bidder_id INTEGER NOT NULL,
-                PRIMARY KEY (player_id, bidder_id)
-            );
-            CREATE TABLE IF NOT EXISTS autopass (
-                bidder_id INTEGER PRIMARY KEY,
-                enabled INTEGER NOT NULL DEFAULT 0
-            );
-            CREATE TABLE IF NOT EXISTS match_points (
-                id SERIAL PRIMARY KEY,
-                match_id TEXT NOT NULL,
-                match_name TEXT,
-                match_date TEXT,
-                player_id INTEGER NOT NULL,
-                player_name TEXT NOT NULL,
-                points REAL NOT NULL DEFAULT 0,
-                breakdown TEXT
-            );
-        """)
-        cur.execute("INSERT INTO auction_state (id) VALUES (1) ON CONFLICT DO NOTHING")
-        db.commit()
-        # Seed players if empty
-        cur.execute("SELECT COUNT(*) FROM players")
-        if cur.fetchone()[0] == 0:
-            _seed_players_pg(db)
-        db.close()
-    else:
-        db = sqlite3.connect(DB_PATH)
-        db.executescript("""
+    db = sqlite3.connect(DB_PATH)
+    db.executescript("""
             CREATE TABLE IF NOT EXISTS bidders (
                 id INTEGER PRIMARY KEY,
                 name TEXT UNIQUE NOT NULL,
@@ -256,30 +84,16 @@ def init_db():
             );
             INSERT OR IGNORE INTO auction_state (id) VALUES (1);
         """)
-        # Seed players if empty
-        cur = db.execute("SELECT COUNT(*) FROM players")
-        if cur.fetchone()[0] == 0:
-            _seed_players(db)
-        db.commit()
-        db.close()
-
-
-def _seed_players_pg(db):
-    """Seed players into Postgres."""
-    cur = db.cursor()
-    for team, players in _get_teams_data().items():
-        for name, role, base in players:
-            cur.execute("INSERT INTO players (name, team, role, base_price) VALUES (%s,%s,%s,%s)",
-                        (name, team, role, base))
-    db.commit()
-
-
-def _seed_players(db):
-    # Seed bidders if empty — no longer pre-seeded, users join dynamically
     # Seed players if empty
     cur = db.execute("SELECT COUNT(*) FROM players")
     if cur.fetchone()[0] == 0:
         _seed_players(db)
+    db.commit()
+    db.close()
+
+
+def _seed_players(db):
+    """Seed with actual IPL 2026 players (all 10 teams, 250 players)."""
     db.commit()
     db.close()
 
@@ -682,13 +496,9 @@ def update_points():
         return jsonify({"error": "match_id required"}), 400
 
     # Check if already processed
-    if USE_POSTGRES:
-        if _pg_match_exists(match_id):
-            return jsonify({"error": "Match already processed"}), 400
-    else:
-        existing = db.execute("SELECT match_id FROM match_points WHERE match_id=? LIMIT 1", (match_id,)).fetchone()
-        if existing:
-            return jsonify({"error": "Match already processed"}), 400
+    existing = db.execute("SELECT match_id FROM match_points WHERE match_id=? LIMIT 1", (match_id,)).fetchone()
+    if existing:
+        return jsonify({"error": "Match already processed"}), 400
 
     try:
         scorecard = fetch_scorecard(match_id)
@@ -708,13 +518,10 @@ def update_points():
                 if last_name:
                     player = db.execute("SELECT id, sold_to FROM players WHERE name LIKE ?", (f"%{last_name}%",)).fetchone()
             if player and player["sold_to"]:
-                if USE_POSTGRES:
-                    _pg_save_match_points(match_id, match_name, match_date, player["id"], pname, pts, json.dumps(pdata["breakdown"]))
-                else:
-                    db.execute(
-                        "INSERT INTO match_points (match_id, match_name, match_date, player_id, player_name, points, breakdown) VALUES (?,?,?,?,?,?,?)",
-                        (match_id, match_name, match_date, player["id"], pname, pts, json.dumps(pdata["breakdown"])),
-                    )
+                db.execute(
+                    "INSERT INTO match_points (match_id, match_name, match_date, player_id, player_name, points, breakdown) VALUES (?,?,?,?,?,?,?)",
+                    (match_id, match_name, match_date, player["id"], pname, pts, json.dumps(pdata["breakdown"])),
+                )
                 count += 1
 
         db.commit()
@@ -737,20 +544,14 @@ def leaderboard():
         total_pts = 0
         player_details = []
         for p in owned:
-            if USE_POSTGRES:
-                pts = _pg_get_player_points(p["id"])
-            else:
-                pts = db.execute("SELECT COALESCE(SUM(points),0) FROM match_points WHERE player_id=?", (p["id"],)).fetchone()[0]
+            pts = db.execute("SELECT COALESCE(SUM(points),0) FROM match_points WHERE player_id=?", (p["id"],)).fetchone()[0]
             total_pts += pts
             player_details.append({"name": p["name"], "team": p["team"], "role": p["role"], "points": pts})
         player_details.sort(key=lambda x: x["points"], reverse=True)
         result.append({"bidder": b["name"], "total_points": total_pts, "players": player_details})
     result.sort(key=lambda x: x["total_points"], reverse=True)
 
-    if USE_POSTGRES:
-        matches = _pg_get_processed_matches()
-    else:
-        matches = [dict(r) for r in db.execute("SELECT DISTINCT match_id, match_name, match_date FROM match_points ORDER BY match_date DESC").fetchall()]
+    matches = [dict(r) for r in db.execute("SELECT DISTINCT match_id, match_name, match_date FROM match_points ORDER BY match_date DESC").fetchall()]
 
     return jsonify({"leaderboard": result, "matches_processed": matches})
 
@@ -927,13 +728,8 @@ def _close_auction(db, state):
 
 if __name__ == "__main__":
     init_db()
-    if USE_POSTGRES:
-        _pg_init()
     _auto_import_seed()
     app.run(debug=True, host="0.0.0.0", port=5050)
 else:
-    # For gunicorn / production
     init_db()
-    if USE_POSTGRES:
-        _pg_init()
     _auto_import_seed()
