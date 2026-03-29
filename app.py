@@ -526,9 +526,6 @@ def update_points():
 
         db.commit()
 
-        # Save all match points to file for persistence
-        _save_match_points_file(db)
-
         return jsonify({"success": True, "players_updated": count, "match": match_name})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
