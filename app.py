@@ -267,12 +267,14 @@ def init_db():
 def _seed_players_pg(db):
     """Seed players into Postgres."""
     cur = db.cursor()
-    teams = _get_player_data()
-    for team, players in teams.items():
+    for team, players in _get_teams_data().items():
         for name, role, base in players:
             cur.execute("INSERT INTO players (name, team, role, base_price) VALUES (%s,%s,%s,%s)",
                         (name, team, role, base))
     db.commit()
+
+
+def _seed_players(db):
     # Seed bidders if empty — no longer pre-seeded, users join dynamically
     # Seed players if empty
     cur = db.execute("SELECT COUNT(*) FROM players")
@@ -284,7 +286,15 @@ def _seed_players_pg(db):
 
 def _seed_players(db):
     """Seed with actual IPL 2026 players (all 10 teams, 250 players)."""
-    teams = {
+    for team, players in _get_teams_data().items():
+        for name, role, base in players:
+            db.execute("INSERT INTO players (name, team, role, base_price) VALUES (?,?,?,?)",
+                       (name, team, role, base))
+
+
+def _get_teams_data():
+    """Return IPL 2026 player data."""
+    return {
         "CSK": [
             ("Ruturaj Gaikwad", "Batsman", 2), ("Ayush Mhatre", "Batsman", 1), ("Dewald Brevis", "Batsman", 2), ("Sarfaraz Khan", "Batsman", 1),
             ("MS Dhoni", "WK", 2), ("Sanju Samson", "WK", 2), ("Kartik Sharma", "WK", 2), ("Urvil Patel", "WK", 1),
@@ -384,10 +394,6 @@ def _seed_players(db):
             ("Praful Hinge", "Bowler", 1), ("Sakib Hussain", "Bowler", 1), ("Zeeshan Ansari", "Bowler", 1),
         ],
     }
-    for team, players in teams.items():
-        for name, role, base in players:
-            db.execute("INSERT INTO players (name, team, role, base_price) VALUES (?,?,?,?)",
-                       (name, team, role, base))
 
 
 # ── API Routes ──────────────────────────────────────────────
