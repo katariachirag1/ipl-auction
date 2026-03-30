@@ -635,6 +635,9 @@ def import_backup():
         return jsonify({"error": "No data provided"}), 400
 
     try:
+        # Clear existing match points first — replace with saved file
+        db.execute("DELETE FROM match_points")
+
         for bidder_data in data.get("bidders", []):
             name = bidder_data["name"]
             budget = bidder_data.get("remaining_budget", BUDGET)
