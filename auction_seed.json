@@ -83,7 +83,7 @@
           "team": "MI"
         },
         {
-          "name": "Prabsimran Singh",
+          "name": "Prabhsimran Singh",
           "role": "WK",
           "sold_price": 1,
           "team": "PBKS"
@@ -108,7 +108,7 @@
           "team": "PBKS"
         },
         {
-          "name": "Varun Chakravarthy",
+          "name": "Varun Chakaravarthy",
           "role": "Bowler",
           "sold_price": 12,
           "team": "KKR"
@@ -120,7 +120,7 @@
           "team": "KKR"
         },
         {
-          "name": "Phil Salt",
+          "name": "Philip Salt",
           "role": "WK",
           "sold_price": 11,
           "team": "RCB"
@@ -356,7 +356,7 @@
           "team": "GT"
         },
         {
-          "name": "Nitish Reddy",
+          "name": "Nitish Kumar Reddy",
           "role": "All-rounder",
           "sold_price": 3,
           "team": "SRH"
@@ -374,13 +374,13 @@
           "team": "MI"
         },
         {
-          "name": "R Sai Kishore",
+          "name": "Ravisrinivasan Sai Kishore",
           "role": "Bowler",
           "sold_price": 1,
           "team": "GT"
         },
         {
-          "name": "Michell Owen",
+          "name": "Mitchell Owen",
           "role": "Batsman",
           "sold_price": 1,
           "team": "PBKS"
@@ -465,7 +465,7 @@
           "team": "RR"
         },
         {
-          "name": "Abhishek Porel",
+          "name": "Abishek Porel",
           "role": "WK",
           "sold_price": 2,
           "team": "DC"
@@ -608,7 +608,7 @@
     },
     {
       "buyer": "KKR 2024",
-      "name": "Varun Chakravarthy",
+      "name": "Varun Chakaravarthy",
       "price": 12,
       "role": "Bowler",
       "team": "KKR"
@@ -636,7 +636,7 @@
     },
     {
       "buyer": "KKR 2024",
-      "name": "Phil Salt",
+      "name": "Philip Salt",
       "price": 11,
       "role": "WK",
       "team": "RCB"
@@ -846,7 +846,7 @@
     },
     {
       "buyer": "Rahul",
-      "name": "Nitish Reddy",
+      "name": "Nitish Kumar Reddy",
       "price": 3,
       "role": "All-rounder",
       "team": "SRH"
@@ -867,7 +867,7 @@
     },
     {
       "buyer": "Dheeraj",
-      "name": "Abhishek Porel",
+      "name": "Abishek Porel",
       "price": 2,
       "role": "WK",
       "team": "DC"
@@ -972,7 +972,7 @@
     },
     {
       "buyer": "Rahul",
-      "name": "R Sai Kishore",
+      "name": "Ravisrinivasan Sai Kishore",
       "price": 1,
       "role": "Bowler",
       "team": "GT"
@@ -1028,14 +1028,14 @@
     },
     {
       "buyer": "Kattu the chase",
-      "name": "Prabsimran Singh",
+      "name": "Prabhsimran Singh",
       "price": 1,
       "role": "WK",
       "team": "PBKS"
     },
     {
       "buyer": "Rahul",
-      "name": "Michell Owen",
+      "name": "Mitchell Owen",
       "price": 1,
       "role": "Batsman",
       "team": "PBKS"
