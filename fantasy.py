@@ -4,7 +4,7 @@ import os
 import json
 import urllib.request
 
-API_KEY = os.environ.get("CRICAPI_KEY", "17c1a5d4-ad60-4f88-b673-f601e553ea16")
+API_KEY = os.environ.get("CRICAPI_KEY", "a6e90d03-35ef-4bae-a67a-8c66c98aceef")
 BASE_URL = "https://api.cricapi.com/v1"
 
 # Dream11-style T20 fantasy points
